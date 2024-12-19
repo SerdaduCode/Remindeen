@@ -1,33 +1,43 @@
-import { useState } from 'react';
-import reactLogo from '@/assets/react.svg';
-import wxtLogo from '/wxt.svg';
-import './App.css';
+import Bahasa from '@/components/Bahasa';
+import Footer from '@/components/Footer';
+import Prayers from '@/components/Prayers';
+import Time from '@/components/Time';
+import Verse from '@/components/Verse';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div
+        style={{
+          height: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://images.photowall.com/products/55234/orient-mosque.jpg?h=699&q=85')`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          zIndex: -999,
+        }}
+      ></div>
+      <div className="text-white">
+        <div className="flex flex-col justify-between min-h-[100vh]">
+          <div className="flex justify-between">
+            <div className="p-8 w-[300px]">
+              <Prayers />
+            </div>
+            <div className="flex-1 text-right p-8">
+              <Bahasa />
+              <Verse />
+            </div>
+          </div>
+
+          <Time />
+
+          <Footer />
+        </div>
       </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
     </>
   );
 }
