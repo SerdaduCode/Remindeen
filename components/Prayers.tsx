@@ -1,8 +1,8 @@
-import Prayer from './Prayer';
+import Prayer from "./Prayer";
 
 const Prayers = () => {
   return (
-    <div className="flex flex-col gap-1 text-xl">
+    <div className="flex flex-col gap-1 text-base md:text-xl">
       <Prayer name="Fajr" time="04:15" />
       <Prayer name="Dhuzhur" time="11:35" />
       <Prayer name="Ashar" time="15:15" />
