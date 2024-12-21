@@ -19,8 +19,14 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.6",
     "@types/chrome": "^0.0.280",
-    "@types/react": "^18.3.12",
+    "@types/filesystem": "^0.0.36",
+    "@types/har-format": "^1.2.16",
+    "@types/prop-types": "^15.7.14",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.1",
     "@wxt-dev/module-react": "^1.1.1",
     "autoprefixer": "^10.4.20",

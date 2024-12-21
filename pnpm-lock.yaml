@@ -15,15 +15,33 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@types/babel__generator':
+        specifier: ^7.6.8
+        version: 7.6.8
+      '@types/babel__template':
+        specifier: ^7.4.4
+        version: 7.4.4
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.20.6
       '@types/chrome':
         specifier: ^0.0.280
         version: 0.0.280
+      '@types/filesystem':
+        specifier: ^0.0.36
+        version: 0.0.36
+      '@types/har-format':
+        specifier: ^1.2.16
+        version: 1.2.16
+      '@types/prop-types':
+        specifier: ^15.7.14
+        version: 15.7.14
       '@types/react':
-        specifier: ^18.3.12
-        version: 18.3.17
+        specifier: ^18.3.18
+        version: 18.3.18
       '@types/react-dom':
         specifier: ^18.3.1
-        version: 18.3.5(@types/react@18.3.17)
+        version: 18.3.5(@types/react@18.3.18)
       '@wxt-dev/module-react':
         specifier: ^1.1.1
         version: 1.1.2(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.6)(yaml@2.6.1))(wxt@0.19.22(@types/node@22.10.2)(rollup@4.28.1)(yaml@2.6.1))
@@ -650,8 +668,8 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
-  '@types/react@18.3.17':
-    resolution: {integrity: sha512-opAQ5no6LqJNo9TqnxBKsgnkIYHozW9KSTlFVoSUJYh1Fl/sswkEoqIugRSm7tbh6pABtYjGAjW+GOS23j8qbw==}
+  '@types/react@18.3.18':
+    resolution: {integrity: sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==}
 
   '@types/webextension-polyfill@0.12.1':
     resolution: {integrity: sha512-xPTFWwQ8BxPevPF2IKsf4hpZNss4LxaOLZXypQH4E63BDLmcwX/RMGdI4tB4VO4Nb6xDBH3F/p4gz4wvof1o9w==}
@@ -3045,11 +3063,11 @@ snapshots:
 
   '@types/prop-types@15.7.14': {}
 
-  '@types/react-dom@18.3.5(@types/react@18.3.17)':
+  '@types/react-dom@18.3.5(@types/react@18.3.18)':
     dependencies:
-      '@types/react': 18.3.17
+      '@types/react': 18.3.18
 
-  '@types/react@18.3.17':
+  '@types/react@18.3.18':
     dependencies:
       '@types/prop-types': 15.7.14
       csstype: 3.1.3
