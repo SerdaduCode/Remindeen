@@ -1,18 +1,6 @@
 const Time = () => {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.open(
-        `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
-        "_blank"
-      );
-      setSearchQuery("");
-    }
-  };
 
   useEffect(() => {
     const updateClock = () => {
@@ -60,22 +48,11 @@ const Time = () => {
   }, []);
 
   return (
-    <div className="justify-center text-center items-center">
-      <div className="flex flex-col gap-0 md:gap-3">
-        <h1 className="text-2xl md:text-8xl">{time}</h1>
-        <p className="md:text-[32px] text-xl">{date}</p>
-        <p className="md:text-[32px] text-xl">Jakarta, Indonesia</p>
-      </div>
-      <div className="flex justify-center mt-5">
-        <form onSubmit={handleSearch} className="w-full max-w-[400px]">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Google..."
-            className="w-full px-4 py-2 rounded-md bg-gray-100 text-gray-500 border border-gray-500"
-          />
-        </form>
+    <div className="justify-end  items-center">
+      <div className="flex flex-col gap-0 md:gap-1">
+        <h1 className="text-6xl">{time}</h1>
+        <p className="md:text-[20px] text-xl">{date}</p>
+        <p className="md:text-[20px] text-xl">Jakarta, Indonesia</p>
       </div>
     </div>
   );
