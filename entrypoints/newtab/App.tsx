@@ -1,4 +1,3 @@
-import Bahasa from "@/components/Bahasa";
 import Footer from "@/components/Footer";
 import Prayers from "@/components/Prayers";
 import Time from "@/components/Time";
@@ -20,25 +19,22 @@ function App() {
           backgroundSize: "cover",
           zIndex: -999,
         }}
-      ></div>
-      <div className="text-white">
-        <div className="flex flex-col justify-between min-h-[100vh]">
-          <div className="flex justify-between flex-col md:flex-row">
-            <div className="p-8 md:w-[300px]">
-              <Prayers />
-            </div>
-            <div className="py-14 md:hidden">
-              <Time />
-            </div>
-            <div className="md:flex-1 md:text-right px-8 text-sm py-4">
-              <Bahasa />
+      >
+        <div className="text-white">
+          <div className="flex flex-col justify-between min-h-[100vh]">
+            <header className="flex justify-between flex-col md:flex-row">
+              <div className="p-8 md:w-[300px]">
+                <Prayers />
+              </div>
+              <div className=" hidden md:block md:text-right px-8 text-sm py-4">
+                <Time />
+              </div>
+            </header>
+            <main className="flex-1">
               <Verse />
-            </div>
+            </main>
+            <Footer />
           </div>
-          <div className="hidden md:block">
-            <Time />
-          </div>
-          <Footer />
         </div>
       </div>
     </>
