@@ -1,6 +1,8 @@
+import { useEffect , useState } from "react";
 const Time = () => {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
+  const [location, setLocation] = useState("Takes Location....");
 
   useEffect(() => {
     const updateClock = () => {
@@ -40,19 +42,62 @@ const Time = () => {
       setDate(`${dayName}, ${day} ${month} ${year}`);
     };
 
-    const interval = setInterval(updateClock, 1000);
+    const getLocation = () => {
+      if (navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const {latitude, longitude} = position.coords;
+            try {
+              const response = await fetch (
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+              );
+              const data = await response.json();
+              const city = data.address.city;
+              const country = data.address.country;
+              const prayerTimesResponse = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=2`);
+              const prayerTimesData = await prayerTimesResponse.json();
+            
+              console.log(prayerTimesData);
+              if (data && data.address){
+                const city = data.address.city || data.address.town || data.address.village || "Unknow City";
+                const country = data.address.country || "Unknow Coutry";
+                setLocation(`${city}, ${country}`);
+              }else{
+                setLocation("Location doesn't found");
+              }
+            } catch (error){
+              console.error("Error getting location data",error);
+              setLocation("Failed get Location");
+            }
+
+          },
+          (error) => {
+            console.error("Error getting Location",error);
+            setLocation("Permmission denied");
+          }
+        );
+      }else{
+        setLocation("Geolocation doesn't support this browser");
+      }
+    };
+    
 
     updateClock();
+    getLocation();
+    const interval = setInterval(updateClock, 1000);
+
 
     return () => clearInterval(interval);
   }, []);
+
+  
 
   return (
     <div className="justify-end  items-center">
       <div className="flex flex-col gap-0 md:gap-1">
         <h1 className="text-6xl">{time}</h1>
         <p className="md:text-[20px] text-xl">{date}</p>
-        <p className="md:text-[20px] text-xl">Jakarta, Indonesia</p>
+        <p className="md:text-[20px] text-xl">{location}</p>
       </div>
     </div>
   );
