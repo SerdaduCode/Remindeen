@@ -30,54 +30,68 @@ const Verse: React.FC = () => {
         );
         const collections = await collectionsResponse.json();
         console.log("Collections Response:", collections);
-
+  
         if (collections.length === 0) {
           throw new Error("No collections available");
         }
-
-        // Pilih koleksi acak
-        const randomCollectionIndex = Math.floor(
-          Math.random() * collections.length
-        );
-        const selectedCollection = collections[randomCollectionIndex];
-
-        const totalHadith = selectedCollection.total;
-        const collectionSlug = selectedCollection.slug;
-        console.log("Selected Collection:", selectedCollection);
-
-        // Pilih nomor hadith acak dari koleksi yang dipilih
-        const randomHadithNumber = Math.floor(Math.random() * totalHadith) + 1;
-
-        // Fetch hadith secara acak dari koleksi
-        const response = await fetch(
-          `https://hadis-api-id.vercel.app/hadith/${collectionSlug}/${randomHadithNumber}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  
+        let validHadith: Hadith | null = null;
+  
+        while (!validHadith) {
+          // Pilih koleksi acak
+          const randomCollectionIndex = Math.floor(
+            Math.random() * collections.length
+          );
+          const selectedCollection = collections[randomCollectionIndex];
+  
+          const totalHadith = selectedCollection.total;
+          const collectionSlug = selectedCollection.slug;
+          console.log("Selected Collection:", selectedCollection);
+  
+          // Pilih nomor hadith acak dari koleksi yang dipilih
+          const randomHadithNumber = Math.floor(Math.random() * totalHadith) + 1;
+  
+          // Fetch hadith secara acak dari koleksi
+          const response = await fetch(
+            `https://hadis-api-id.vercel.app/hadith/${collectionSlug}/${randomHadithNumber}`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log("API Response:", data);
+  
+          if (data && data.arab && data.id) {
+            const potentialHadith: Hadith = {
+              arabic: data.arab,
+              english: data.id,
+              reference: `Hadith ${data.name} nomor ${data.number}`,
+            };
+  
+            // Validasi panjang teks bahasa Inggris
+            if (potentialHadith.english.length <= 300) {
+              validHadith = potentialHadith;
+            } else {
+              console.log(
+                `Hadith too long (${potentialHadith.english.length} characters). Fetching again...`
+              );
+            }
+          } else {
+            throw new Error("Invalid data structure");
+          }
         }
-        const data = await response.json();
-        console.log("API Response:", data);
-
-        if (data && data.arab && data.id) {
-          const hadithData: Hadith = {
-            arabic: data.arab,
-            english: data.id,
-            reference: `Hadith ${data.name} nomor ${data.number}`,
-          };
-          setHadith(hadithData);
-          setError(null);
-        } else {
-          throw new Error("Invalid data structure");
-        }
+  
+        setHadith(validHadith);
+        setError(null);
       } catch (error) {
         console.error("Error fetching hadith:", error);
         setError(error);
       }
     };
-
+  
     fetchHadith();
   }, []);
-
+  
   return (
     <div className="mt-20">
       <div className="no-scrollbar container mx-auto mb-8 max-h-[200px] max-w-[80%] overflow-y-auto">
