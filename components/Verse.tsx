@@ -10,6 +10,8 @@ const Verse: React.FC = () => {
   const [hadith, setHadith] = useState<Hadith | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const MAX_LENGTH = 100; // Batas maksimum panjang teks (contoh: 300 karakter)
+
   useEffect(() => {
     const fetchHadith = async () => {
       try {
@@ -30,28 +32,41 @@ const Verse: React.FC = () => {
         const collectionSlug = selectedCollection.slug;
         console.log("Selected Collection:", selectedCollection);
 
-        // Pilih nomor hadith acak dari koleksi yang dipilih
-        const randomHadithNumber = Math.floor(Math.random() * totalHadith) + 1;
+        let validHadith = null;
 
-        // Fetch hadith secara acak dari koleksi
-        const response = await fetch(`https://hadis-api-id.vercel.app/hadith/${collectionSlug}/${randomHadithNumber}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("API Response:", data);
+        while (!validHadith) {
+          // Pilih nomor hadith acak dari koleksi yang dipilih
+          const randomHadithNumber = Math.floor(Math.random() * totalHadith) + 1;
 
-        if (data && data.arab && data.id) {
-          const hadithData: Hadith = {
-            arabic: data.arab,
-            english: data.id,
-            reference: `Hadith ${data.name} nomor ${data.number}`
-          };
-          setHadith(hadithData);
-          setError(null);
-        } else {
-          throw new Error("Invalid data structure");
+          // Fetch hadith secara acak dari koleksi
+          const response = await fetch(`https://hadis-api-id.vercel.app/hadith/${collectionSlug}/${randomHadithNumber}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log("API Response:", data);
+
+          if (data && data.arab && data.id) {
+            const arabicTextLength = data.arab.length;
+            const englishTextLength = data.id.length;
+
+            // Cek apakah panjang teks terlalu panjang
+            if (arabicTextLength <= MAX_LENGTH && englishTextLength <= MAX_LENGTH) {
+              validHadith = {
+                arabic: data.arab,
+                english: data.id,
+                reference: `Hadith ${data.name} nomor ${data.number}`,
+              };
+            } else {
+              console.log("Text too long, fetching another hadith...");
+            }
+          } else {
+            throw new Error("Invalid data structure");
+          }
         }
+
+        setHadith(validHadith);
+        setError(null);
       } catch (error) {
         console.error("Error fetching hadith:", error);
         setError(error.message);
