@@ -1,8 +1,10 @@
-const Footer = () => {
+const Footer = ({ updateShowModal }: { updateShowModal: () => void }) => {
   return (
     <footer className="flex justify-between p-4">
       <div>
-        <h4>About us</h4>
+        <h4 onClick={updateShowModal} className="cursor-pointer">
+          About us
+        </h4>
       </div>
       <div>
         <h4>Support us</h4>
