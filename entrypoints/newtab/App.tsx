@@ -1,9 +1,16 @@
+import About from "@/components/About";
 import Footer from "@/components/Footer";
 import Prayers from "@/components/Prayers";
 import Time from "@/components/Time";
 import Verse from "@/components/Verse";
 
 function App() {
+  const [showModal, setShowModal] = useState(false);
+
+  const updateShowModal = () => {
+    setShowModal((prev) => !prev);
+  };
+
   return (
     <>
       <div
@@ -33,7 +40,8 @@ function App() {
             <main className="flex-1">
               <Verse />
             </main>
-            <Footer />
+            {showModal && <About />}
+            <Footer updateShowModal={updateShowModal} />
           </div>
         </div>
       </div>

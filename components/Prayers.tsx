@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Prayer from "./Prayer";
+import Skeleton from "./Skeleton";
 
 type PrayerTimes = {
   Fajr: string;
@@ -65,7 +66,7 @@ const Prayers = () => {
     getLocation();
   }, []);
   if (!prayerTimes) {
-    return <div>Loading prayer times...</div>;
+    return <Skeleton />;
   }
 
   return (
