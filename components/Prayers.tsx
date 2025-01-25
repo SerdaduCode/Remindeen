@@ -10,18 +10,18 @@ type PrayerTimes = {
   Isha: string;
 };
 
+
 const Prayers = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPrayerTimes = async () => {
+    const fetchPrayerTimes = async (latitude: number, longitude: number) => {
       try {
-        const city = "Jakarta";
-        const country = "ID";
         const date = new Date().toISOString().split("T")[0];
-
         const response = await fetch(
-          `https://api.aladhan.com/v1/timingsByCity?date=${date}&city=${city}&country=${country}&method=20`
+          `https://api.aladhan.com/v1/timings/${date}?latitude=${latitude}&longitude=${longitude}&method=20`
         );
         const data = await response.json();
 
@@ -33,14 +33,38 @@ const Prayers = () => {
             Maghrib: data.data.timings.Maghrib,
             Isha: data.data.timings.Isha,
           });
+        } else {
+          setError("Data waktu salat tidak ditemukan.");
         }
       } catch (error) {
         console.error("Error fetching prayer times", error);
+        setError("Failed take Prayer times");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchPrayerTimes();
-  }, []);
 
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            fetchPrayerTimes(latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location", error);
+            setError("Gagal mendapatkan lokasi pengguna.");
+            setLoading(false);
+          }
+        );
+      } else {
+        setError("Geolocation doesn't support this browser.");
+        setLoading(false);
+      }
+    };
+
+    getLocation();
+  }, []);
   if (!prayerTimes) {
     return <Skeleton />;
   }
