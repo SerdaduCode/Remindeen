@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-interface Hadith {
+interface Quote {
   arabic: string;
-  english: string;
-  reference: string;
+  quote: string;
+  author: string;
 }
 
 const Verse: React.FC = () => {
-  const [hadith, setHadith] = useState<Hadith | null>(null);
+  const [quote, setQuote] = useState<Quote | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<any>();
 
@@ -21,92 +21,45 @@ const Verse: React.FC = () => {
       setSearchQuery("");
     }
   };
+
   useEffect(() => {
-    const fetchHadith = async () => {
+    const fetchQuote = async () => {
       try {
-        // Fetch semua koleksi hadith
-        const collectionsResponse = await fetch(
-          `https://hadis-api-id.vercel.app/hadith`
-        );
-        const collections = await collectionsResponse.json();
-        console.log("Collections Response:", collections);
-  
-        if (collections.length === 0) {
-          throw new Error("No collections available");
+        // Fetch quote dari API baru
+        const response = await fetch("https://quotes.serdadu.dev/quotes/random");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-  
-        let validHadith: Hadith | null = null;
-  
-        while (!validHadith) {
-          // Pilih koleksi acak
-          const randomCollectionIndex = Math.floor(
-            Math.random() * collections.length
-          );
-          const selectedCollection = collections[randomCollectionIndex];
-  
-          const totalHadith = selectedCollection.total;
-          const collectionSlug = selectedCollection.slug;
-          console.log("Selected Collection:", selectedCollection);
-  
-          // Pilih nomor hadith acak dari koleksi yang dipilih
-          const randomHadithNumber = Math.floor(Math.random() * totalHadith) + 1;
-  
-          // Fetch hadith secara acak dari koleksi
-          const response = await fetch(
-            `https://hadis-api-id.vercel.app/hadith/${collectionSlug}/${randomHadithNumber}`
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          console.log("API Response:", data);
-  
-          if (data && data.arab && data.id) {
-            const potentialHadith: Hadith = {
-              arabic: data.arab,
-              english: data.id,
-              reference: `Hadith ${data.name} nomor ${data.number}`,
-            };
-  
-            // Validasi panjang teks bahasa Inggris
-            if (potentialHadith.english.length <= 300) {
-              validHadith = potentialHadith;
-            } else {
-              console.log(
-                `Hadith too long (${potentialHadith.english.length} characters). Fetching again...`
-              );
-            }
-          } else {
-            throw new Error("Invalid data structure");
-          }
-        }
-  
-        setHadith(validHadith);
+
+        const data = await response.json();
+        console.log("API Response:", data);
+
+        // Set data ke state
+        setQuote({
+          arabic: data.arabic || "", // Jika `arabic` kosong, set placeholder
+          quote: data.quote,
+          author: data.author,
+        });
+
         setError(null);
       } catch (error) {
-        console.error("Error fetching hadith:", error);
+        console.error("Error fetching quote:", error);
         setError(error);
       }
     };
-  
-    fetchHadith();
+
+    fetchQuote();
   }, []);
-  
+
   return (
     <div className="mt-20">
       <div className="no-scrollbar container mx-auto mb-8 max-h-[200px] max-w-[80%] overflow-y-auto">
-        {error && <p>Error: {error}</p>}
-        {hadith ? (
+        {error && <p>Error: {error.message}</p>}
+        {quote ? (
           <div>
-            <p className="md:text-xl text-sm mb-8 text-center">
-              {hadith.arabic}
-            </p>
-            <p className="md:text-xl text-sm mb-5 text-center">
-              "{hadith.english}"
-            </p>
-            <p className="md:text-base text-sm flex justify-end">
-              {hadith.reference}
-            </p>
+            <p className="md:text-xl text-sm mb-8 text-center">{quote.arabic}</p>
+            <p className="md:text-xl text-sm mb-5 text-center">"{quote.quote}"</p>
+            <p className="md:text-base text-sm flex justify-end">{quote.author}</p>
           </div>
         ) : (
           !error && <p>Loading...</p>
