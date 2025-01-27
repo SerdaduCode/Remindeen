@@ -3,11 +3,17 @@ const Footer = ({ updateShowModal }: { updateShowModal: () => void }) => {
     <footer className="flex justify-between p-4">
       <div>
         <h4 onClick={updateShowModal} className="cursor-pointer">
-          About us
+          <span className="bg-white px-2 text-black rounded-full opacity-80 hover:shadow-md hover:shadow-slate-200 ">
+            About us
+          </span>
         </h4>
       </div>
       <div>
-        <h4>Support us</h4>
+        <h4 className="cursor-pointer">
+          <span className="bg-white px-2 text-black rounded-full opacity-80 hover:shadow-md hover:shadow-slate-200">
+            Support us
+          </span>
+        </h4>
       </div>
     </footer>
   );

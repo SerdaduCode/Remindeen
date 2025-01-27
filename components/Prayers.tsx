@@ -10,10 +10,8 @@ type PrayerTimes = {
   Isha: string;
 };
 
-
 const Prayers = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,8 +37,6 @@ const Prayers = () => {
       } catch (error) {
         console.error("Error fetching prayer times", error);
         setError("Failed take Prayer times");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -54,17 +50,18 @@ const Prayers = () => {
           (error) => {
             console.error("Error getting location", error);
             setError("Gagal mendapatkan lokasi pengguna.");
-            setLoading(false);
           }
         );
       } else {
         setError("Geolocation doesn't support this browser.");
-        setLoading(false);
       }
     };
 
     getLocation();
   }, []);
+  if (error) {
+    return <p>{error}</p>;
+  }
   if (!prayerTimes) {
     return <Skeleton />;
   }

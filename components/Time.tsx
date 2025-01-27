@@ -1,4 +1,4 @@
-import { useEffect , useState } from "react";
+import { useEffect, useState } from "react";
 const Time = () => {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
@@ -43,54 +43,47 @@ const Time = () => {
     };
 
     const getLocation = () => {
-      if (navigator.geolocation){
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            const {latitude, longitude} = position.coords;
+            const { latitude, longitude } = position.coords;
             try {
-              const response = await fetch (
+              const response = await fetch(
                 `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
               );
               const data = await response.json();
-              const city = data.address.city;
-              const country = data.address.country;
-              const prayerTimesResponse = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=2`);
-              const prayerTimesData = await prayerTimesResponse.json();
-            
-              console.log(prayerTimesData);
-              if (data && data.address){
-                const city = data.address.city || data.address.town || data.address.village || "Unknow City";
+              if (data && data.address) {
+                const city =
+                  data.address.city ||
+                  data.address.town ||
+                  data.address.village ||
+                  "Unknow City";
                 const country = data.address.country || "Unknow Coutry";
                 setLocation(`${city}, ${country}`);
-              }else{
+              } else {
                 setLocation("Location doesn't found");
               }
-            } catch (error){
-              console.error("Error getting location data",error);
+            } catch (error) {
+              console.error("Error getting location data", error);
               setLocation("Failed get Location");
             }
-
           },
           (error) => {
-            console.error("Error getting Location",error);
-            setLocation("Permmission denied");
+            console.error("Error getting Location", error);
+            setLocation("Please Allow Location");
           }
         );
-      }else{
+      } else {
         setLocation("Geolocation doesn't support this browser");
       }
     };
-    
 
     updateClock();
     getLocation();
     const interval = setInterval(updateClock, 1000);
 
-
     return () => clearInterval(interval);
   }, []);
-
-  
 
   return (
     <div className="justify-end  items-center">
