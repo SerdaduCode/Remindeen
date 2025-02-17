@@ -16,7 +16,9 @@ const Verse: React.FC = () => {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.open(
-        `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
+        `${import.meta.env.VITE_API_SEARCH}?q=${encodeURIComponent(
+          searchQuery
+        )}`,
         "_blank"
       );
       setSearchQuery("");
@@ -29,9 +31,7 @@ const Verse: React.FC = () => {
     const fetchQuote = async () => {
       try {
         // Fetch quote dari API baru
-        const response = await fetch(
-          "https://quotes.serdadu.dev/quotes/random"
-        );
+        const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 

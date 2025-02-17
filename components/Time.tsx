@@ -49,7 +49,9 @@ const Time = () => {
             const { latitude, longitude } = position.coords;
             try {
               const response = await fetch(
-                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                `${
+                  import.meta.env.VITE_API_GET_LOCATION
+                }?format=json&lat=${latitude}&lon=${longitude}`
               );
               const data = await response.json();
               if (data && data.address) {

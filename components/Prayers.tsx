@@ -19,7 +19,9 @@ const Prayers = () => {
       try {
         const date = new Date().toISOString().split("T")[0];
         const response = await fetch(
-          `https://api.aladhan.com/v1/timings/${date}?latitude=${latitude}&longitude=${longitude}&method=20`
+          `${
+            import.meta.env.VITE_API_PRAYER_TIMES
+          }/${date}?latitude=${latitude}&longitude=${longitude}&method=20`
         );
         const data = await response.json();
 
