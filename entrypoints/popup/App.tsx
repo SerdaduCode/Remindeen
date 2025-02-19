@@ -1,35 +1,40 @@
-import { useState } from 'react';
-import reactLogo from '@/assets/react.svg';
-import wxtLogo from '/wxt.svg';
-import './App.css';
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0);
+import React, { useState, useEffect } from "react";
+
+const Popup: React.FC = () => {
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Ambil status ekstensi dari storage saat komponen dimuat
+    chrome.storage.local.get(["isEnabled"], (result) => {
+      setIsEnabled(result.isEnabled || false);
+    });
+  }, []);
+
+  const toggleExtension = () => {
+    const newStatus = !isEnabled;
+    setIsEnabled(newStatus);
+    chrome.storage.local.set({ isEnabled: newStatus }, () => {
+      setIsEnabled(newStatus);
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
-    </>
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+      <h1 className="text-lg font-semibold mb-4">Remindeen</h1>
+      <button
+        onClick={toggleExtension}
+        className={`px-4 py-2 rounded ${
+          isEnabled
+            ? "bg-red-500 hover:bg-red-600"
+            : "bg-green-500 hover:bg-green-600"
+        } text-white font-bold`}
+      >
+        {isEnabled ? "Turn Off" : "Turn On"}
+      </button>
+    </div>
   );
-}
+};
 
-export default App;
+export default Popup;
