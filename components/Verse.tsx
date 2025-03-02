@@ -8,26 +8,12 @@ interface Quote {
 
 const Verse: React.FC = () => {
   const [quote, setQuote] = useState<Quote | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<any>(null);
   const isFetched = useRef(false);
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.open(
-        `${import.meta.env.VITE_API_SEARCH}?q=${encodeURIComponent(
-          searchQuery
-        )}`,
-        "_blank"
-      );
-      setSearchQuery("");
-    }
-  };
-
   useEffect(() => {
-    if (isFetched.current) return; // Jangan fetch lagi jika sudah dilakukan
-    isFetched.current = true; // Tandai fetch sudah dilakukan
+    if (isFetched.current) return;
+    isFetched.current = true;
     const fetchQuote = async () => {
       try {
         // Fetch quote dari API baru
@@ -37,9 +23,8 @@ const Verse: React.FC = () => {
 
         const data = await response.json();
 
-        // Set data ke state
         setQuote({
-          arabic: data.arabic || "", // Jika `arabic` kosong, set placeholder
+          arabic: data.arabic || "",
           quote: data.quote,
           author: data.author,
         });
@@ -77,26 +62,6 @@ const Verse: React.FC = () => {
             </div>
           )
         )}
-      </div>
-      <div className="flex justify-center">
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center w-full max-w-md bg-white shadow rounded-full p-2 border border-gray-300 shadow-slate-300"
-        >
-          <img
-            src="/icon/search.png"
-            alt="Search Icon"
-            className="text-gray-500 ml-3 w-5 h-5 cursor-pointer"
-            onClick={(e: any) => handleSearch(e)}
-          />
-          <input
-            type="text"
-            placeholder="Search Google or type a URL"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-grow px-4 text-gray-500 outline-none text-sm italic"
-          />
-        </form>
       </div>
     </div>
   );
