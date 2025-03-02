@@ -47,7 +47,7 @@ function App() {
               <div className="p-8 md:w-[300px]">
                 <Prayers />
               </div>
-              <div className=" hidden md:block md:text-right px-8 text-sm py-4">
+              <div className="hidden md:block md:text-right px-8 text-sm pt-2">
                 <Time />
               </div>
             </header>

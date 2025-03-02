@@ -1,14 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 
 // Fungsi untuk menghitung jarak antara dua titik koordinat menggunakan rumus Haversine
-const distance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+const distance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number => {
   const R = 6371; // Radius bumi dalam kilometer
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Jarak dalam km
   return d;
@@ -17,7 +24,9 @@ const distance = (lat1: number, lon1: number, lat2: number, lon2: number): numbe
 const Time = () => {
   const [time, setTime] = useState<string>(localStorage.getItem("time") || "");
   const [date, setDate] = useState<string>(localStorage.getItem("date") || "");
-  const [location, setLocation] = useState<string>(localStorage.getItem("location") || "Takes Location....");
+  const [location, setLocation] = useState<string>(
+    localStorage.getItem("location") || "Takes Location...."
+  );
 
   const lastPosition = useRef<{ lat: number; lon: number } | null>(null); // Menyimpan posisi terakhir
 
@@ -70,7 +79,12 @@ const Time = () => {
 
             // Cek apakah posisi sudah berubah jauh
             if (lastPosition.current) {
-              const dist = distance(lastPosition.current.lat, lastPosition.current.lon, latitude, longitude);
+              const dist = distance(
+                lastPosition.current.lat,
+                lastPosition.current.lon,
+                latitude,
+                longitude
+              );
               if (dist < 1) {
                 // Jika jaraknya kurang dari 1 km, tidak fetch data lokasi
                 return;
