@@ -18,7 +18,7 @@ function App() {
     const getBackgroundImage = async () => {
       const picture = await fetchPicture();
       if (picture) {
-        setBackgroundUrl(picture.url); // Set the image URL from API response
+        setBackgroundUrl(picture.url);
       }
     };
 
