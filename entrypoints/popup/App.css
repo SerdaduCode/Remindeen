@@ -7,13 +7,13 @@
 
 .logo {
     height: 6em;
-    padding: 1.5em;
+    width: 7em;
     will-change: filter;
     transition: filter 300ms;
 }
 
 .logo:hover {
-    filter: drop-shadow(0 0 2em #54bc4ae0);
+    filter: drop-shadow(0 0 2em #3c9934e0);
 }
 
 .logo.react:hover {
@@ -45,4 +45,8 @@
 
 .textJustify {
     text-align: justify;
+}
+
+.round {
+    border-radius: 10px;
 }

@@ -3,6 +3,7 @@ import Prayer from "./Prayer";
 import Skeleton from "./Skeleton";
 
 type PrayerTimes = {
+  Imsak: string;
   Fajr: string;
   Dhuhr: string;
   Asr: string;
@@ -15,6 +16,27 @@ const Prayers = () => {
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(true);
   const [timeRemainingText, setTimeRemainingText] = useState<string>("");
+  const [currentPrayer, setCurrentPrayer] = useState<string | null>(null);
+
+  const getCurrentPrayer = (times: PrayerTimes | null) => {
+    if (!times) return null;
+
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    let lastPrayer = "Fajr";
+
+    for (const [prayer, time] of Object.entries(times)) {
+      const [hours, minutes] = time.split(":").map(Number);
+      const prayerTime = hours * 60 + minutes;
+
+      if (currentTime >= prayerTime) {
+        lastPrayer = prayer;
+      } else {
+        break;
+      }
+    }
+    return lastPrayer;
+  };
 
   const getNextPrayer = (times: PrayerTimes | null) => {
     if (!times)
@@ -73,6 +95,7 @@ const Prayers = () => {
 
         if (data?.data?.timings) {
           const newTimes: PrayerTimes = {
+            Imsak: data.data.timings.Imsak,
             Fajr: data.data.timings.Fajr,
             Dhuhr: data.data.timings.Dhuhr,
             Asr: data.data.timings.Asr,
@@ -83,6 +106,7 @@ const Prayers = () => {
           const next = getNextPrayer(newTimes);
           setNextPrayer(next);
           setTimeRemainingText(next.remainingText);
+          setCurrentPrayer(getCurrentPrayer(newTimes));
         } else {
           setError("Data waktu salat tidak ditemukan.");
         }
@@ -151,11 +175,16 @@ const Prayers = () => {
           hidden ? "opacity-0" : "opacity-100"
         }`}
       >
-        <Prayer name="Fajr" time={prayerTimes.Fajr} />
-        <Prayer name="Dhuhr" time={prayerTimes.Dhuhr} />
-        <Prayer name="Asr" time={prayerTimes.Asr} />
-        <Prayer name="Maghrib" time={prayerTimes.Maghrib} />
-        <Prayer name="Isha" time={prayerTimes.Isha} />
+        {Object.entries(prayerTimes).map(([prayer, time]) => (
+          <Prayer
+            key={prayer}
+            name={prayer}
+            time={time}
+            className={
+              prayer === currentPrayer ? "bg-amber-400 text-slate-800" : ""
+            }
+          />
+        ))}
       </div>
     </div>
   );
