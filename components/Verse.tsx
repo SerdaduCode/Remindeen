@@ -58,7 +58,7 @@ const Verse: React.FC = () => {
         {error && <p>Error: {error.message}</p>}
         {quote ? (
           <div>
-            <p className="md:text-xl text-sm mb-8 text-center">
+            <p className="md:text-4xl text-arabic text-sm mb-8 text-center">
               {quote.arabic}
             </p>
             <p className="md:text-xl text-sm mb-3 text-center">
