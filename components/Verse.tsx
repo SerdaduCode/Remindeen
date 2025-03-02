@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 interface Quote {
   arabic: string;
@@ -12,29 +12,42 @@ const Verse: React.FC = () => {
   const isFetched = useRef(false);
 
   useEffect(() => {
-    if (isFetched.current) return;
-    isFetched.current = true;
-    const fetchQuote = async () => {
-      try {
-        // Fetch quote dari API baru
-        const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
+    // Check if data is available in localStorage
+    const storedQuotes = localStorage.getItem("Quotes");
+    
+    if (storedQuotes) {
+      // Parse the quotes and select a random quote
+      const quotes = JSON.parse(storedQuotes);
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      setQuote(randomQuote);
+    } else {
+      // If no quotes in localStorage, fetch from API
+      if (isFetched.current) return;
+      isFetched.current = true;
 
-        const data = await response.json();
+      const fetchQuote = async () => {
+        try {
+          // Fetch quote from API
+          const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
 
-        setQuote({
-          arabic: data.arabic || "",
-          quote: data.quote,
-          author: data.author,
-        });
-      } catch (error) {
-        console.error("Error fetching quote:", error);
-        setError(error);
-      }
-    };
+          const data = await response.json();
 
-    fetchQuote();
+          // Save the fetched quote array to localStorage
+          localStorage.setItem("Quotes", JSON.stringify(data));
+
+          // Pick a random quote from the fetched data
+          const randomQuote = data[Math.floor(Math.random() * data.length)];
+          setQuote(randomQuote);
+        } catch (error) {
+          console.error("Error fetching quote:", error);
+          setError(error);
+        }
+      };
+
+      fetchQuote();
+    }
   }, []);
 
   return (
