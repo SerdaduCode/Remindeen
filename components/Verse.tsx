@@ -94,7 +94,7 @@ const Verse: React.FC = () => {
             placeholder="Search Google or type a URL"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-grow px-4 text-black outline-none text-sm italic"
+            className="flex-grow px-4 text-gray-500 outline-none text-sm italic"
           />
         </form>
       </div>

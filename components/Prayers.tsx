@@ -14,9 +14,11 @@ const Prayers = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(true);
+  const [timeRemainingText, setTimeRemainingText] = useState<string>("");
 
   const getNextPrayer = (times: PrayerTimes | null) => {
-    if (!times) return { prayer: "Fajr", time: "00:00" };
+    if (!times)
+      return { prayer: "Fajr", time: "00:00", remainingText: "0 menit lagi" };
 
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -26,11 +28,34 @@ const Prayers = () => {
       const prayerTime = hours * 60 + minutes;
 
       if (prayerTime > currentTime) {
-        return { prayer, time };
+        return {
+          prayer,
+          time,
+          remainingText: formatRemainingTime(prayerTime - currentTime),
+        };
       }
     }
 
-    return { prayer: "Fajr", time: times.Fajr };
+    const [fajrHours, fajrMinutes] = times.Fajr.split(":").map(Number);
+    const fajrTime = fajrHours * 60 + fajrMinutes + 24 * 60;
+    return {
+      prayer: "Fajr",
+      time: times.Fajr,
+      remainingText: formatRemainingTime(fajrTime - currentTime),
+    };
+  };
+
+  const formatRemainingTime = (minutesLeft: number) => {
+    const hours = Math.floor(minutesLeft / 60);
+    const minutes = minutesLeft % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return `${hours} hr ${minutes} min`;
+    } else if (hours > 0) {
+      return `${hours} hr`;
+    } else {
+      return `${minutes} min`;
+    }
   };
 
   const [nextPrayer, setNextPrayer] = useState(getNextPrayer(prayerTimes));
@@ -55,7 +80,9 @@ const Prayers = () => {
             Isha: data.data.timings.Isha,
           };
           setPrayerTimes(newTimes);
-          setNextPrayer(getNextPrayer(newTimes));
+          const next = getNextPrayer(newTimes);
+          setNextPrayer(next);
+          setTimeRemainingText(next.remainingText);
         } else {
           setError("Data waktu salat tidak ditemukan.");
         }
@@ -89,7 +116,9 @@ const Prayers = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setNextPrayer(getNextPrayer(prayerTimes));
+      const next = getNextPrayer(prayerTimes);
+      setNextPrayer(next);
+      setTimeRemainingText(next.remainingText);
     }, 60000);
 
     return () => clearInterval(interval);
@@ -101,22 +130,26 @@ const Prayers = () => {
   return (
     <div className="flex flex-col gap-2 text-base md:text-xl">
       <div
-        className="bg-teal-500 text-slate-800 px-5 rounded-md cursor-pointer"
+        className="bg-emerald-400 text-slate-800 px-5 rounded-md cursor-pointer"
         onClick={() => setHidden(!hidden)}
       >
         <Prayer name={nextPrayer?.prayer} time={nextPrayer?.time}>
-          <div
-            className={`flex justify-end ${
-              hidden ? "rotate-90" : "rotate-180"
-            }`}
-          >
-            ^
+          <div className="flex flex-col justify-between items-center">
+            <div
+              className={`transition-transform ${
+                hidden ? "rotate-90" : "rotate-180"
+              }`}
+            >
+              ^
+            </div>
           </div>
         </Prayer>
+        <p className="text-xs text-end mr-5 italic">{timeRemainingText}</p>
       </div>
       <div
-        className={`flex flex-col gap-1 text-base md:text-xl
-          ${hidden ? "opacity-0 duration-300" : "opacity-100 duration-300"}`}
+        className={`flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${
+          hidden ? "opacity-0" : "opacity-100"
+        }`}
       >
         <Prayer name="Fajr" time={prayerTimes.Fajr} />
         <Prayer name="Dhuhr" time={prayerTimes.Dhuhr} />

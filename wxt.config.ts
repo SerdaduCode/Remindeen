@@ -9,7 +9,7 @@ export default defineConfig({
     name: "Remindeen",
     version: "1.0",
     action: {
-      default_popup: "popup.html",
+      default_popup: "index.html",
     },
     permissions: ["storage", "tabs"],
   },

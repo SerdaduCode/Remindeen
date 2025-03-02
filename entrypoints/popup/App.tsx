@@ -1,38 +1,20 @@
 import "./App.css";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const Popup: React.FC = () => {
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Ambil status ekstensi dari storage saat komponen dimuat
-    chrome.storage.local.get(["isEnabled"], (result) => {
-      setIsEnabled(result.isEnabled || false);
-    });
-  }, []);
-
-  const toggleExtension = () => {
-    const newStatus = !isEnabled;
-    setIsEnabled(newStatus);
-    chrome.storage.local.set({ isEnabled: newStatus }, () => {
-      setIsEnabled(newStatus);
-    });
-  };
-
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md">
-      <h1 className="text-lg font-semibold mb-4">Remindeen</h1>
-      <button
-        onClick={toggleExtension}
-        className={`px-4 py-2 rounded ${
-          isEnabled
-            ? "bg-red-500 hover:bg-red-600"
-            : "bg-green-500 hover:bg-green-600"
-        } text-white font-bold`}
-      >
-        {isEnabled ? "Turn Off" : "Turn On"}
-      </button>
+    <div className="bg-gray-100 rounded-lg shadow-md">
+      <h1 className="text-lg font-semibold">Remindeen</h1>
+      <img src="/icon/logo.png" width={80} height={60} className="logo" />
+      <p className="textJustify">
+        Remindeen adalah sebuah browser extension yang dirancang khusus untuk
+        menjadi pengingat dan sumber inspirasi bagi umat Muslim dalam menjalani
+        aktivitas sehari-hari. Dengan fitur utama berupa jadwal salat yang
+        akurat sesuai lokasi pengguna, Remindeen membantu memastikan ibadah kamu
+        selalu tepat waktu. Selain itu, Remindeen juga menampilkan dakwah
+        singkat berupa ayat-ayat Al-Qur'an dan hadits pilihan yang memberi
+        motivasi dan menyejukkan hati.
+      </p>
     </div>
   );
 };
