@@ -154,7 +154,7 @@ const Prayers = () => {
   return (
     <div className="flex flex-col gap-2 text-base md:text-xl">
       <div
-        className="bg-emerald-400 text-slate-800 px-5 rounded-md cursor-pointer"
+        className="border-2 border-slate-100 text-slate-100 px-5 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
         onClick={() => setHidden(!hidden)}
       >
         <Prayer name={nextPrayer?.prayer} time={nextPrayer?.time}>
@@ -168,7 +168,7 @@ const Prayers = () => {
             </div>
           </div>
         </Prayer>
-        <p className="text-xs text-end mr-5 italic">{timeRemainingText}</p>
+        <p className="text-sm text-end mr-5 italic">{timeRemainingText}</p>
       </div>
       <div
         className={`flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${

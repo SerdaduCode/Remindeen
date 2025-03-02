@@ -19,7 +19,7 @@ const Verse: React.FC = () => {
         `${import.meta.env.VITE_API_SEARCH}?q=${encodeURIComponent(
           searchQuery
         )}`,
-        "_blank"
+        "_self"
       );
       setSearchQuery("");
     }
