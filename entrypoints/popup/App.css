@@ -50,3 +50,11 @@
 .round {
     border-radius: 10px;
 }
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-sub {
+    font-size: 0.9rem;
+}
