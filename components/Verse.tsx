@@ -12,32 +12,35 @@ const Verse: React.FC = () => {
   const isFetched = useRef(false);
 
   useEffect(() => {
-    // Check if data is available in localStorage
+    const expirationTime = 1000 * 60 * 60 * 12;
     const storedQuotes = localStorage.getItem("Quotes");
+    const lastFetchTime = localStorage.getItem("LastFetchTime");
 
-    if (storedQuotes) {
-      // Parse the quotes and select a random quote
-      const quotes = JSON.parse(storedQuotes);
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      setQuote(randomQuote);
+    const currentTime = new Date().getTime();
+
+    if (storedQuotes && lastFetchTime) {
+      const timeDifference = currentTime - Number(lastFetchTime);
+
+      if (timeDifference < expirationTime) {
+        const quotes = JSON.parse(storedQuotes);
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        setQuote(randomQuote);
+      }
     } else {
-      // If no quotes in localStorage, fetch from API
       if (isFetched.current) return;
       isFetched.current = true;
 
       const fetchQuote = async () => {
         try {
-          // Fetch quote from API
           const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
           if (!response.ok)
             throw new Error(`HTTP error! status: ${response.status}`);
 
           const data = await response.json();
 
-          // Save the fetched quote array to localStorage
           localStorage.setItem("Quotes", JSON.stringify(data));
+          localStorage.setItem("LastFetchTime", currentTime.toString());
 
-          // Pick a random quote from the fetched data
           const randomQuote = data[Math.floor(Math.random() * data.length)];
           setQuote(randomQuote);
         } catch (error) {
@@ -69,9 +72,9 @@ const Verse: React.FC = () => {
         ) : (
           !error && (
             <div className="animate-pulse">
-              <div className="h-2.5 bg-gray-300 rounded-full  max-w-[640px] md:max-w-[720px] mb-2.5 mx-auto" />
-              <div className="h-2.5 bg-gray-300 rounded-full  max-w-[640px] md:max-w-[720px] mb-2.5 mx-auto" />
-              <div className="h-2.5 mx-auto bg-gray-300 rounded-full  max-w-[540px]" />
+              <div className="h-2.5 bg-gray-300 rounded-full max-w-[640px] md:max-w-[720px] mb-2.5 mx-auto" />
+              <div className="h-2.5 bg-gray-300 rounded-full max-w-[640px] md:max-w-[720px] mb-2.5 mx-auto" />
+              <div className="h-2.5 mx-auto bg-gray-300 rounded-full max-w-[540px]" />
             </div>
           )
         )}
