@@ -8,23 +8,28 @@ interface Picture {
   
 const fetchPicture = async (): Promise<Picture | null> => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_PICTURE}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const storedPictures = localStorage.getItem("Pictures");
 
-        const data = await response.json();
-        
-        // Assuming the API returns an object with the necessary fields
-        return {
-        id: data.id,
-        url: data.url,
-        source: data.source,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt,
-        } as Picture;
+        if (storedPictures) {
+            const pictures: Picture[] = JSON.parse(storedPictures);
+            const randomPicture = pictures[Math.floor(Math.random() * pictures.length)];
+            return randomPicture;
+        } else {
+            const response = await fetch(`${import.meta.env.VITE_API_PICTURE}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            const data = await response.json();
+
+            localStorage.setItem("Pictures", JSON.stringify(data));
+
+            const randomPicture = data[Math.floor(Math.random() * data.length)];
+            return randomPicture;
+        }
     } catch (error) {
         console.error("Error fetching picture:", error);
         return null;
     }
-}
-
+};
+  
 export default fetchPicture;
+  

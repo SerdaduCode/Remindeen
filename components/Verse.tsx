@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 interface Quote {
   arabic: string;
@@ -8,7 +8,6 @@ interface Quote {
 
 const Verse: React.FC = () => {
   const [quote, setQuote] = useState<Quote | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<any>(null);
   const isFetched = useRef(false);
 
@@ -26,30 +25,42 @@ const Verse: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isFetched.current) return; // Jangan fetch lagi jika sudah dilakukan
-    isFetched.current = true; // Tandai fetch sudah dilakukan
-    const fetchQuote = async () => {
-      try {
-        // Fetch quote dari API baru
-        const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
+    // Check if data is available in localStorage
+    const storedQuotes = localStorage.getItem("Quotes");
+    
+    if (storedQuotes) {
+      // Parse the quotes and select a random quote
+      const quotes = JSON.parse(storedQuotes);
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      setQuote(randomQuote);
+    } else {
+      // If no quotes in localStorage, fetch from API
+      if (isFetched.current) return;
+      isFetched.current = true;
 
-        const data = await response.json();
+      const fetchQuote = async () => {
+        try {
+          // Fetch quote from API
+          const response = await fetch(`${import.meta.env.VITE_API_QUOTES}`);
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
 
-        // Set data ke state
-        setQuote({
-          arabic: data.arabic || "", // Jika `arabic` kosong, set placeholder
-          quote: data.quote,
-          author: data.author,
-        });
-      } catch (error) {
-        console.error("Error fetching quote:", error);
-        setError(error);
-      }
-    };
+          const data = await response.json();
 
-    fetchQuote();
+          // Save the fetched quote array to localStorage
+          localStorage.setItem("Quotes", JSON.stringify(data));
+
+          // Pick a random quote from the fetched data
+          const randomQuote = data[Math.floor(Math.random() * data.length)];
+          setQuote(randomQuote);
+        } catch (error) {
+          console.error("Error fetching quote:", error);
+          setError(error);
+        }
+      };
+
+      fetchQuote();
+    }
   }, []);
 
   return (
@@ -77,26 +88,6 @@ const Verse: React.FC = () => {
             </div>
           )
         )}
-      </div>
-      <div className="flex justify-center">
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center w-full max-w-md bg-white shadow rounded-full p-2 border border-gray-300 shadow-slate-300"
-        >
-          <img
-            src="/icon/search.png"
-            alt="Search Icon"
-            className="text-gray-500 ml-3 w-5 h-5 cursor-pointer"
-            onClick={(e: any) => handleSearch(e)}
-          />
-          <input
-            type="text"
-            placeholder="Search Google or type a URL"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-grow px-4 text-gray-500 outline-none text-sm italic"
-          />
-        </form>
       </div>
     </div>
   );
