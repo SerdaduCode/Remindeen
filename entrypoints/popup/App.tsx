@@ -3,22 +3,23 @@ import React from "react";
 
 const Popup: React.FC = () => {
   return (
-    <div className="bg-gray-100 rounded-lg shadow-md">
-      <h1 className="text-lg font-semibold">Remindeen</h1>
+    <div className="px-3 text-center">
+      <h1>About</h1>
       <img
-        src="/icon/logo.png"
+        src="/icon/serdadu.png"
         width={80}
         height={60}
-        className="logo mx-auto round"
+        className="logo round"
       />
-      <p className="textJustify">
-        Remindeen is a browser extension specifically designed to serve as a
-        reminder and source of inspiration for Muslims in their daily
-        activities. Its main feature is an accurate prayer schedule based on the
-        user's location, ensuring that worship is always performed on time.
-        Additionally, Remindeen displays short Islamic teachings in the form of
-        selected Quranic verses and hadiths that provide motivation and bring
-        peace to the heart.
+      <p className="my-2">Reach Your Dream, Rich Your Mind</p>
+      <hr />
+      <p className="textJustify mx-2">
+        This IT community focuses on skill development through collaboration,
+        training and knowledge sharing. With a commitment to open source
+        research and development projects, our goal is to expand our portfolio
+        and build a reputation in the technology industry. We believe that the
+        best innovations come from collaboration and the spirit of sharing is
+        the cornerstone of every initiative.
       </p>
     </div>
   );

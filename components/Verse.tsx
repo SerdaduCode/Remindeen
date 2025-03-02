@@ -11,6 +11,19 @@ const Verse: React.FC = () => {
   const [error, setError] = useState<any>(null);
   const isFetched = useRef(false);
 
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.open(
+        `${import.meta.env.VITE_API_SEARCH}?q=${encodeURIComponent(
+          searchQuery
+        )}`,
+        "_self"
+      );
+      setSearchQuery("");
+    }
+  };
+
   useEffect(() => {
     // Check if data is available in localStorage
     const storedQuotes = localStorage.getItem("Quotes");

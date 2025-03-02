@@ -34,8 +34,7 @@ function App() {
           top: 0,
           left: 0,
           right: 0,
-          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${backgroundUrl})`
-          ,
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${backgroundUrl})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
