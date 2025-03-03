@@ -23,6 +23,7 @@ const Search = () => {
         <img
           src="/icon/search.png"
           alt="Search Icon"
+          loading="lazy"
           className="text-gray-500 ml-3 w-5 h-5 cursor-pointer"
           onClick={(e: any) => handleSearch(e)}
         />
