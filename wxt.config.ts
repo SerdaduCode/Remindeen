@@ -11,6 +11,6 @@ export default defineConfig({
     action: {
       default_popup: "index.html",
     },
-    permissions: ["storage", "tabs"],
+    permissions: ["storage", "tabs", "geolocation"],
   },
 });
