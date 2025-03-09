@@ -1,6 +1,6 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "Remindeen",
+  "description": "Remindeen adalah browser extension untuk mengingatkan sholat dan memberi inspirasi bagi Muslim dalam aktivitas sehari-hari.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
