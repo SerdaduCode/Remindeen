@@ -1,6 +1,6 @@
 {
-  "name": "Remindeen",
-  "description": "Remindeen adalah browser extension untuk mengingatkan sholat dan memberi inspirasi bagi Muslim dalam aktivitas sehari-hari.",
+  "name": "remindeen",
+  "description": "Remindeen mengingatkan sholat dan memberi inspirasi bagi Muslim dalam aktivitas sehari-hari.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -11,6 +11,15 @@ export default defineConfig({
     action: {
       default_popup: "index.html",
     },
-    permissions: ["storage", "tabs", "geolocation"],
+    permissions: ["geolocation"],
+    browser_specific_settings: {
+      gecko: {
+        id: "remindeen@serdadu.dev",
+        strict_min_version: "90.0",
+      },
+      safari: {
+        strict_min_version: "15.0"
+      },
+    },
   },
 });

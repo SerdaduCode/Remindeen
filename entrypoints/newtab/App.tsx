@@ -4,7 +4,6 @@ import Prayers from "@/components/Prayers";
 import Time from "@/components/Time";
 import Verse from "@/components/Verse";
 import fetchPicture from "@/components/Background";
-import Search from "@/components/Search";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -53,7 +52,6 @@ function App() {
             </header>
             <main className="flex-1">
               <Verse />
-              <Search />
             </main>
             {showModal && <About />}
             <Footer updateShowModal={updateShowModal} />
