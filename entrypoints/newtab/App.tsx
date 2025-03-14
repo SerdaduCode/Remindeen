@@ -4,13 +4,21 @@ import Prayers from "@/components/Prayers";
 import Time from "@/components/Time";
 import Verse from "@/components/Verse";
 import fetchPicture from "@/components/Background";
+import Support from "@/components/support";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
   const [backgroundUrl, setBackgroundUrl] = useState("");
 
   const updateShowModal = () => {
+    if (showSupport) setShowSupport(false);
     setShowModal((prev) => !prev);
+  };
+
+  const updateShowSupport = () => {
+    if (showModal) setShowModal(false);
+    setShowSupport((prev) => !prev);
   };
 
   useEffect(() => {
@@ -54,7 +62,11 @@ function App() {
               <Verse />
             </main>
             {showModal && <About />}
-            <Footer updateShowModal={updateShowModal} />
+            {showSupport && <Support />}
+            <Footer
+              updateShowModal={updateShowModal}
+              updateShowSupport={updateShowSupport}
+            />
           </div>
         </div>
       </div>
