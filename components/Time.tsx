@@ -3,7 +3,6 @@ const Time = () => {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("Takes Location....");
-  const locationLocal = JSON.parse(localStorage.getItem("Location") || "null");
 
   useEffect(() => {
     const updateClock = () => {
@@ -42,7 +41,8 @@ const Time = () => {
       const year = now.getFullYear();
       setDate(`${dayName}, ${day} ${month} ${year}`);
     };
-    const getLocation = async () => {
+
+    const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
@@ -61,10 +61,6 @@ const Time = () => {
                   data.address.village ||
                   "Unknow City";
                 const country = data.address.country || "Unknow Coutry";
-                localStorage.setItem(
-                  "Location",
-                  JSON.stringify(`${city}, ${country}`)
-                );
                 setLocation(`${city}, ${country}`);
               } else {
                 setLocation("Location doesn't found");
@@ -96,7 +92,7 @@ const Time = () => {
       <div className="flex flex-col gap-0 md:gap-1">
         <h1 className="text-6xl">{time}</h1>
         <p className="md:text-[20px] text-xl">{date}</p>
-        <p className="md:text-[20px] text-xl">{locationLocal || location}</p>
+        <p className="md:text-[20px] text-xl">{location}</p>
       </div>
     </div>
   );
