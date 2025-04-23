@@ -1,4 +1,10 @@
-const Footer = ({ updateShowModal }: { updateShowModal: () => void }) => {
+const Footer = ({
+  updateShowModal,
+  updateShowSupport,
+}: {
+  updateShowModal: () => void;
+  updateShowSupport: () => void;
+}) => {
   return (
     <footer className="flex justify-between p-4">
       <div>
@@ -9,7 +15,7 @@ const Footer = ({ updateShowModal }: { updateShowModal: () => void }) => {
         </h4>
       </div>
       <div>
-        <h4 className="cursor-pointer">
+        <h4 className="cursor-pointer" onClick={updateShowSupport}>
           <span className="px-2 text-white rounded-full border-slate-100 border hover:bg-slate-100 hover:text-black transform duration-300">
             Support
           </span>

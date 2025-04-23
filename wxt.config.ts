@@ -7,10 +7,19 @@ export default defineConfig({
   manifest: {
     manifest_version: 3,
     name: "Remindeen",
-    version: "1.0",
+    version: "1.2.0",
     action: {
       default_popup: "index.html",
     },
-    permissions: ["storage", "tabs"],
+    permissions: ["geolocation"],
+    browser_specific_settings: {
+      gecko: {
+        id: "remindeen@serdadu.dev",
+        strict_min_version: "90.0",
+      },
+      safari: {
+        strict_min_version: "15.0"
+      },
+    },
   },
 });

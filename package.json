@@ -1,8 +1,8 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "remindeen",
+  "description": "Remindeen mengingatkan sholat dan memberi inspirasi bagi Muslim dalam aktivitas sehari-hari.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

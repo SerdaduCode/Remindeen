@@ -54,18 +54,18 @@ const Verse: React.FC = () => {
   }, []);
 
   return (
-    <div className="my-3">
-      <div className="no-scrollbar container mx-auto mb-8 max-h-[200px] max-w-[80%] overflow-y-auto">
+    <div className="my-5">
+      <div className="no-scrollbar container mx-auto mb-8 max-w-[80%]">
         {error && <p>Error: {error.message}</p>}
         {quote ? (
           <div>
-            <p className="md:text-4xl text-arabic text-sm mb-8 text-center">
+            <p className="md:text-5xl/loose text-arabic text-sm mb-8 text-center drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)] leading-relaxed">
               {quote.arabic}
             </p>
-            <p className="md:text-xl text-sm mb-3 text-center">
+            <p className="md:text-2xl text-sm mb-3 text-center drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)]">
               "{quote.quote}"
             </p>
-            <p className="md:text-base text-sm flex justify-end mr-24">
+            <p className="md:text-lg text-sm flex justify-end mr-24 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)]">
               {quote.author}
             </p>
           </div>
