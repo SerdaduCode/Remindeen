@@ -1,25 +1,21 @@
 import { defineAppConfig } from '#imports';
 
-// Define types for your config
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
-    features?: {
-      enableChat?: boolean;
-      maxTokens?: number;
-    };
     language?: {
       default?: 'en' | 'id';
       available?: { label: string; value: 'en' | 'id' }[];
     };
     about?: string;
+    translation?: {
+      [key: string]: {
+        [lang in 'en' | 'id']?: string;
+      };
+    };
   }
 }
 
 export default defineAppConfig({
-  features: {
-    enableChat: import.meta.env.WXT_ENABLE_CHAT === 'true' || true,
-    maxTokens: parseInt(import.meta.env.WXT_MAX_TOKENS || '1000'),
-  },
   language: {
     default: 'en',
     available: [
@@ -27,5 +23,62 @@ export default defineAppConfig({
       { label: 'Bahasa Indonesia', value: 'id' },
     ],
   },
-  about: 'Remindeen is a browser extension specifically designed to be a prayer reminder and source of inspiration for Muslims in carrying out their daily activities.',
+  translation: {
+    'header.description': {
+      en: 'Prayer reminders and daily inspiration while you browse',
+      id: 'Pengingat sholat dan inspirasi harian saat kamu browsing',
+    },
+    'tabs.settings': {
+      en: 'Settings',
+      id: 'Pengaturan',
+    },
+    'tabs.home': {
+      en: 'Today',
+      id: 'Hari Ini',
+    },
+    'tabs.trends': {
+      en: 'Trends',
+      id: 'Tren',
+    },
+    'settings.theme': {
+      en: 'Theme',
+      id: 'Tema',
+    },
+    'settings.theme.description': {
+      en: 'Customize the look and feel',
+      id: 'Sesuaikan tampilan dan nuansa',
+    },
+    'settings.theme.system': {
+      en: 'System',
+      id: 'Sistem',
+    },
+    'settings.theme.light': {
+      en: 'Light',
+      id: 'Terang',
+    },
+    'settings.theme.dark': {
+      en: 'Dark',
+      id: 'Gelap',
+    },
+    'settings.language': {
+      en: 'Language',
+      id: 'Bahasa',
+    },
+    'settings.about': {
+      en: 'About',
+      id: 'Tentang',
+    },
+    'settings.about.description': {
+      en: 'Remindeen is a browser extension specifically designed to be a prayer reminder and source of inspiration for Muslims in carrying out their daily activities.',
+      id: 'Remindeen adalah ekstensi browser yang dirancang untuk menjadi pengingat sholat dan sumber inspirasi bagi umat Muslim dalam menjalankan aktivitas sehari-hari.',
+    },
+    'settings.support': {
+      en: 'Support',
+      id: 'Dukungan',
+    },
+    'settings.support.description': {
+      en: 'Show your love by scanning the QR code below ❤️',
+      id: 'Tunjukkan dukunganmu dengan memindai kode QR di bawah ini ❤️',
+    },
+  },
 });

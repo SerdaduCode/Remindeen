@@ -15,7 +15,7 @@ export default defineConfig({
     manifest_version: 3,
 
     name: "Remindeen",
-    version: "1.2.0",
+    version: "1.3.0",
 
     action: {
       default_title: "Open Remindeen Panel",

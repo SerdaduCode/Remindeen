@@ -14,6 +14,7 @@ interface SystemSettings {
 
 interface UISettings {
   activeTab: string
+  language: 'en' | 'id'
 }
 
 // Define storage items
@@ -32,14 +33,15 @@ const systemSettings = storage.defineItem<SystemSettings>('local:systemSettings'
 
 const uiSettings = storage.defineItem<UISettings>('local:uiSettings', {
   fallback: {
-    activeTab: 'home'
+    activeTab: 'home',
+    language: 'en'
   }
 })
 
 export function useSettings() {
   const [appearance, setAppearance] = useState<AppearanceSettings>({ theme: 'system' })
   const [system, setSystem] = useState<SystemSettings>({ notifications: true, syncInterval: 15 })
-  const [ui, setUI] = useState<UISettings>({ activeTab: 'home' })
+  const [ui, setUI] = useState<UISettings>({ activeTab: 'home', language: 'en' })
   const [loading, setLoading] = useState(true)
 
   // Load settings
@@ -108,9 +110,9 @@ export function useSettings() {
       ])
       
       // Reset to default values
-      const defaultAppearance = { theme: 'system' as Theme }
-      const defaultSystem = { notifications: true, syncInterval: 15 }
-      const defaultUI = { activeTab: 'home' }
+      const defaultAppearance: AppearanceSettings = { theme: 'system' }
+      const defaultSystem: SystemSettings = { notifications: true, syncInterval: 15 }
+      const defaultUI: UISettings = { activeTab: 'home', language: 'en' }
       
       setAppearance(defaultAppearance)
       setSystem(defaultSystem)

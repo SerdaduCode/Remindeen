@@ -1,24 +1,35 @@
-const About = () => {
-  return (
-    <div className="w-screen md:w-[520px] bg-black/60 px-2 md:px-0 md:ml-4 rounded-lg">
-      <div className="rounded-lg shadow-md py-2 md:py-4 px-3">
-        <h1 className="md:text-3xl text-xl mb-1 font-semibold px-5">Remindeen</h1>
-        <hr />
-        <div className="my-4 flex gap-3 md:gap-8 px-5">
-          <img
-            src="/icon/logo.png"
-            className="cursor-pointer w-24 h-24 md:w-36 md:h-36 rounded-md hover:drop-shadow-[0_0_2em_#3c9934e0] transition duration-300 ease-in-out"
-            loading="lazy"
-          />
-          <p className="text-justify text-xs md:text-sm">
-            Remindeen is a browser extension specifically designed to be a
-            prayer reminder and source of inspiration for Muslims in carrying
-            out their daily activities.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Info } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { useTranslation } from "@/hooks/use-translation"
 
-export default About;
+const About = () => {
+  const { t } = useTranslation()
+
+  return (
+    <div>
+      <div className="mb-4">
+        <Label className="text-lg font-medium flex items-center gap-2">
+          <Info className="h-4 w-4" />
+          {t("settings.about")}
+        </Label>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg text-center">
+            Remindeen &nbsp;
+            <Badge variant="secondary">v1.3.0</Badge>
+          </CardTitle>
+
+          <CardDescription>
+            {t("settings.about.description")}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
+  )
+}
+
+export default About
