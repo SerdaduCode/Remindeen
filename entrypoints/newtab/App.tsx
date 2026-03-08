@@ -1,10 +1,10 @@
-import About from "@/components/About";
-import Footer from "@/components/Footer";
-import Prayers from "@/components/Prayers";
-import Time from "@/components/Time";
-import Verse from "@/components/Verse";
-import fetchPicture from "@/components/Background";
-import Support from "@/components/support";
+import About from "@/components/remindeen/About";
+import Footer from "@/components/remindeen/Footer";
+import Prayers from "@/components/remindeen/Prayers";
+import Time from "@/components/remindeen/Time";
+import Verse from "@/components/remindeen/Verse";
+import fetchPicture from "@/components/remindeen/Background";
+import Support from "@/components/remindeen/support";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -63,10 +63,10 @@ function App() {
             </main>
             {showModal && <About />}
             {showSupport && <Support />}
-            <Footer
+            {/* <Footer
               updateShowModal={updateShowModal}
               updateShowSupport={updateShowSupport}
-            />
+            /> */}
           </div>
         </div>
       </div>
