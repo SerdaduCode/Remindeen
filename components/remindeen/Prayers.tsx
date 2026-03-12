@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ArrowUpIcon } from "@radix-ui/react-icons"
 import Prayer from "./Prayer";
 import Skeleton from "./Skeleton";
 
@@ -154,21 +155,21 @@ const Prayers = () => {
   return (
     <div className="flex flex-col gap-2 text-base md:text-xl">
       <div
-        className="border-2 border-slate-100 text-slate-100 px-5 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
+        className="border-2 border-slate-100 text-slate-100 px-3 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
         onClick={() => setHidden(!hidden)}
       >
         <Prayer name={nextPrayer?.prayer} time={nextPrayer?.time}>
-          <div className="flex flex-col justify-between items-center">
+          <div className="flex flex-col justify-center items-center">
             <div
               className={`transition-transform ${
                 hidden ? "rotate-90" : "rotate-180"
               }`}
             >
-              ^
+              <ArrowUpIcon className="w-5 h-5" />
             </div>
           </div>
         </Prayer>
-        <p className="text-sm text-end mr-5 italic">{timeRemainingText}</p>
+        <p className="w-full text-sm text-end mr-5 italic">{timeRemainingText}</p>
       </div>
       <div
         className={`flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${
@@ -181,7 +182,7 @@ const Prayers = () => {
             name={prayer}
             time={time}
             className={
-              prayer === currentPrayer ? "bg-amber-400 text-slate-800" : ""
+              prayer === currentPrayer ? "bg-amber-400 text-slate-800 font-bold" : ""
             }
           />
         ))}
