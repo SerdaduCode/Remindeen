@@ -81,6 +81,13 @@ const Prayers = () => {
     }
   };
 
+  const minutesToTime = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`
+  }
+
   const [nextPrayer, setNextPrayer] = useState(getNextPrayer(prayerTimes));
 
   useEffect(() => {
@@ -140,8 +147,21 @@ const Prayers = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       const next = getNextPrayer(prayerTimes);
+      const now = new Date()
+      const currentTime = now.getHours() * 60 + now.getMinutes();
+
+      if (minutesToTime(currentTime) === next.time) {
+        await browser.notifications.create("", {
+          type: "basic",
+            iconUrl: "/wxt.svg",
+            title: "Remindeen",
+            message: next.prayer,
+            eventTime: 50000
+        })
+      }
+      
       setNextPrayer(next);
       setTimeRemainingText(next.remainingText);
     }, 60000);

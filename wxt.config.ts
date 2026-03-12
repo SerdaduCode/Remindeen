@@ -28,6 +28,7 @@ export default defineConfig({
       "storage",
       "tabs",
       "commands",
+      "notifications",
     ],
 
     side_panel: {
