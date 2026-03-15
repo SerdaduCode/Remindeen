@@ -12,7 +12,7 @@ export default function AppTab() {
   ]
 
   return (
-    <TabsList className="h-auto rounded-none border-b bg-transparent p-0 w-full hidden">
+    <TabsList className="h-auto rounded-none border-b bg-transparent p-0 w-full">
       {tabs.map((tab) => {
         const Icon = tab.icon
         return (

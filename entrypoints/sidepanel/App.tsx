@@ -10,7 +10,8 @@ import About from "@/components/remindeen/About"
 import Theme from "@/components/remindeen/Theme"
 import Language from "@/components/remindeen/Language"
 import AppTab from "@/components/remindeen/AppTab"
-
+import ActivityWidget from "@/components/remindeen/ActivityWidget"
+import ChartBarDefault from "@/components/remindeen/BarChartTimely"
 function App() {
   const { ui, loading, updateUI } = useSettings()
 
@@ -31,6 +32,22 @@ function App() {
           <AppTab />
 
           <TabsContent value="home" className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-4">
+                <ActivityWidget />
+              </div>
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="trends" className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-4">
+                <ChartBarDefault />
+              </div>
+            </ScrollArea>
+          </TabsContent>
+
+           <TabsContent value="settings" className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
               <div className="space-y-4 p-4">
                 <Theme></Theme>
