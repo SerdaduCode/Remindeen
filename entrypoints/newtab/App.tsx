@@ -26,7 +26,8 @@ function App() {
           top: 0,
           left: 0,
           right: 0,
-          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.0), rgba(0,0,0,0.1)), url(${backgroundUrl})`,
+          // backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.0), rgba(0,0,0,0.1)), url(${backgroundUrl})`,
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.0), rgba(0,0,0,0.1)), url("/images/img-default.png")`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
@@ -35,7 +36,7 @@ function App() {
       >
         <div className="text-white">
           <div className="flex flex-col justify-between min-h-[100vh]">
-            <header className="flex justify-between flex-col md:flex-row">
+            <header className="flex justify-between flex-col md:flex-row absolute w-full">
               <div className="p-8 md:w-[300px]">
                 <Prayers />
               </div>
@@ -43,7 +44,7 @@ function App() {
                 <Time />
               </div>
             </header>
-            <main className="flex-1">
+            <main className="flex-1 flex flex-col items-center justify-center">
               <Verse />
             </main>
           </div>
