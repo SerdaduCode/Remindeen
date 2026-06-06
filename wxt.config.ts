@@ -29,6 +29,7 @@ export default defineConfig({
       "tabs",
       "commands",
       "notifications",
+      "idle",
     ],
 
     side_panel: {

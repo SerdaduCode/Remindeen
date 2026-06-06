@@ -10,6 +10,9 @@ import About from "@/components/remindeen/About"
 import Theme from "@/components/remindeen/Theme"
 import Language from "@/components/remindeen/Language"
 import AppTab from "@/components/remindeen/AppTab"
+import Today from "@/components/remindeen/Today"
+import RecentActivity from "@/components/remindeen/RecentActivity"
+import SearchBarToggle from "@/components/remindeen/SearchBarToggle"
 
 function App() {
   const { ui, loading, updateUI } = useSettings()
@@ -29,18 +32,21 @@ function App() {
       <div className="flex-1 overflow-hidden">
         <Tabs value={ui.activeTab} onValueChange={handleTabChange} className="h-full flex flex-col gap-0">
           <AppTab />
-
           <TabsContent value="home" className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
+              <div className="space-y-4 p-4">
+                <Today />
+              </div>
+              <Separator />
               <div className="space-y-4 p-4">
                 <Theme></Theme>
                 <Separator />
                 <Language></Language>
                 <Separator />
+                <SearchBarToggle />
+                <Separator />
                 <About />
                 <Separator />
-                <Support />
-                <Separator></Separator>
                 <Footer></Footer>
               </div>
             </ScrollArea>

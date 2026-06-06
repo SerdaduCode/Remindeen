@@ -10,6 +10,7 @@ interface AppearanceSettings {
 interface SystemSettings {
   notifications: boolean
   syncInterval: number
+  showSearchBar: boolean
 }
 
 interface UISettings {
@@ -27,7 +28,8 @@ const appearanceSettings = storage.defineItem<AppearanceSettings>('local:appeara
 const systemSettings = storage.defineItem<SystemSettings>('local:systemSettings', {
   fallback: {
     notifications: true,
-    syncInterval: 15
+    syncInterval: 15,
+    showSearchBar: true
   }
 })
 
@@ -40,7 +42,7 @@ const uiSettings = storage.defineItem<UISettings>('local:uiSettings', {
 
 export function useSettings() {
   const [appearance, setAppearance] = useState<AppearanceSettings>({ theme: 'system' })
-  const [system, setSystem] = useState<SystemSettings>({ notifications: true, syncInterval: 15 })
+  const [system, setSystem] = useState<SystemSettings>({ notifications: true, syncInterval: 15, showSearchBar: true })
   const [ui, setUI] = useState<UISettings>({ activeTab: 'home', language: 'en' })
   const [loading, setLoading] = useState(true)
 
@@ -65,6 +67,23 @@ export function useSettings() {
     }
 
     loadSettings()
+
+    // Watch for cross-context changes (e.g. sidepanel → newtab)
+    const unwatchAppearance = appearanceSettings.watch((newVal) => {
+      if (newVal) setAppearance(newVal)
+    })
+    const unwatchSystem = systemSettings.watch((newVal) => {
+      if (newVal) setSystem(newVal)
+    })
+    const unwatchUI = uiSettings.watch((newVal) => {
+      if (newVal) setUI(newVal)
+    })
+
+    return () => {
+      unwatchAppearance()
+      unwatchSystem()
+      unwatchUI()
+    }
   }, [])
 
   // Update appearance settings
@@ -111,7 +130,7 @@ export function useSettings() {
       
       // Reset to default values
       const defaultAppearance: AppearanceSettings = { theme: 'system' }
-      const defaultSystem: SystemSettings = { notifications: true, syncInterval: 15 }
+      const defaultSystem: SystemSettings = { notifications: true, syncInterval: 15, showSearchBar: true }
       const defaultUI: UISettings = { activeTab: 'home', language: 'en' }
       
       setAppearance(defaultAppearance)

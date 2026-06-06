@@ -1,10 +1,13 @@
 import Prayers from "@/components/remindeen/Prayers";
 import Time from "@/components/remindeen/Time";
 import Verse from "@/components/remindeen/Verse";
+import SearchBar from "@/components/remindeen/SearchBar";
 import fetchPicture from "@/components/remindeen/Background";
+import { useSettings } from "@/hooks/use-settings";
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState("");
+  const { system } = useSettings();
 
   useEffect(() => {
     const getBackgroundImage = async () => {
@@ -34,7 +37,7 @@ function App() {
         }}
       >
         <div className="text-white">
-          <div className="flex flex-col justify-between min-h-[100vh]">
+          <div className="flex flex-col justify-evenly min-h-[100vh]">
             <header className="flex justify-between flex-col md:flex-row">
               <div className="p-8 md:w-[300px]">
                 <Prayers />
@@ -43,8 +46,9 @@ function App() {
                 <Time />
               </div>
             </header>
-            <main className="flex-1">
+            <main className="flex-1 flex flex-col items-center gap-12 px-4">
               <Verse />
+              {system.showSearchBar && <SearchBar />}
             </main>
           </div>
         </div>

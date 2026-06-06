@@ -80,5 +80,33 @@ export default defineAppConfig({
       en: 'Show your love by scanning the QR code below ❤️',
       id: 'Tunjukkan dukunganmu dengan memindai kode QR di bawah ini ❤️',
     },
+    'widgets.today': {
+      en: 'Today',
+      id: 'Hari Ini',
+    },
+    'widgets.recent_activity': {
+      en: 'Recent Activity',
+      id: 'Aktivitas Terbaru',
+    },
+    'widgets.show_all': {
+      en: 'Show all',
+      id: 'Tampilkan semua',
+    },
+    'widgets.show_less': {
+      en: 'Show less',
+      id: 'Sembunyikan',
+    },
+    'settings.searchbar': {
+      en: 'Search Bar',
+      id: 'Bilah Pencarian',
+    },
+    'settings.searchbar.description': {
+      en: 'Show or hide the search bar',
+      id: 'Tampilkan atau sembunyikan bilah pencarian',
+    },
+    'settings.searchbar.toggle': {
+      en: 'Show search bar on new tab',
+      id: 'Tampilkan bilah pencarian di tab baru',
+    },
   },
 });
