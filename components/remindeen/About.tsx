@@ -29,7 +29,7 @@ const About = () => {
         </CardHeader>
       </Card>
       <div className="pt-4">
-        <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">Sharing your thoughts and feedback <a className="text-primary underline" href="mailto:admin@serdadu.dev">here</a>, thank you.</p>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">Sharing your thoughts and feedback <a className="text-primary underline" href="https://remindeen.serdadu.dev" target="_blank">here</a>, thank you.</p>
       </div>
     </div>
   )
