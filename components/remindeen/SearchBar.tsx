@@ -50,7 +50,7 @@ const SearchBar = ({ className = "" }: SearchBarProps) => {
             ${
               isFocused
                 ? "bg-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] ring-1 ring-white/30 scale-[1.02]"
-                : "bg-white/10 backdrop-blur-lg shadow-[0_4px_16px_rgba(0,0,0,0.15)] ring-1 ring-white/15 hover:bg-white/15 hover:ring-white/25"
+                : "bg-white/20 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.15)] ring-1 ring-white/15 hover:bg-white/15 hover:ring-white/25"
             }
           `}
         >
@@ -69,7 +69,7 @@ const SearchBar = ({ className = "" }: SearchBarProps) => {
             placeholder="Search Google or type a URL"
             className="
               w-full bg-transparent py-3.5 pl-11 pr-16
-              text-white text-[15px] font-light tracking-wide
+              text-white text-[16px] font-medium tracking-wide
               placeholder:text-white/40
               outline-none border-none
               caret-white/80

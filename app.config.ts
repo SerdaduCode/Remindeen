@@ -108,5 +108,89 @@ export default defineAppConfig({
       en: 'Show search bar on new tab',
       id: 'Tampilkan bilah pencarian di tab baru',
     },
+    'prayers.imsak': {
+      en: 'Imsak',
+      id: 'Imsak',
+    },
+    'prayers.fajr': {
+      en: 'Fajr',
+      id: 'Subuh',
+    },
+    'prayers.dhuhr': {
+      en: 'Dhuhr',
+      id: 'Dzuhur',
+    },
+    'prayers.asr': {
+      en: 'Asr',
+      id: 'Ashar',
+    },
+    'prayers.maghrib': {
+      en: 'Maghrib',
+      id: 'Maghrib',
+    },
+    'prayers.isha': {
+      en: 'Isha',
+      id: 'Isya',
+    },
+    'prayers.hour_short': {
+      en: 'hr',
+      id: 'jam',
+    },
+    'prayers.minute_short': {
+      en: 'min',
+      id: 'menit',
+    },
+    'prayers.remaining_suffix': {
+      en: ' left',
+      id: ' lagi',
+    },
+    'prayers.fallback_remaining': {
+      en: '0 min left',
+      id: '0 menit lagi',
+    },
+    'prayers.error_not_found': {
+      en: 'Prayer time data not found.',
+      id: 'Data waktu salat tidak ditemukan.',
+    },
+    'prayers.error_failed': {
+      en: 'Failed to fetch Prayer times',
+      id: 'Gagal mengambil waktu salat',
+    },
+    'prayers.error_location': {
+      en: 'Failed to get user location.',
+      id: 'Gagal mendapatkan lokasi pengguna.',
+    },
+    'prayers.error_geolocation': {
+      en: 'Geolocation is not supported by this browser.',
+      id: 'Geolocation tidak didukung oleh browser ini.',
+    },
+    'location.loading': {
+      en: 'Getting location...',
+      id: 'Mendapatkan lokasi...',
+    },
+    'location.unknown_city': {
+      en: 'Unknown City',
+      id: 'Kota Tidak Diketahui',
+    },
+    'location.unknown_country': {
+      en: 'Unknown Country',
+      id: 'Negara Tidak Diketahui',
+    },
+    'location.not_found': {
+      en: 'Location not found',
+      id: 'Lokasi tidak ditemukan',
+    },
+    'location.failed': {
+      en: 'Failed to get location',
+      id: 'Gagal mendapatkan lokasi',
+    },
+    'location.allow': {
+      en: 'Please allow location access',
+      id: 'Harap izinkan akses lokasi',
+    },
+    'location.not_supported': {
+      en: 'Geolocation not supported by this browser',
+      id: 'Geolocation tidak didukung oleh browser ini',
+    },
   },
 });

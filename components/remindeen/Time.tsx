@@ -1,8 +1,23 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "@/hooks/use-translation";
+
+interface LocationState {
+  status: 'loading' | 'error' | 'success';
+  key?: string;
+  data?: {
+    city: string;
+    country: string;
+  };
+}
+
 const Time = () => {
+  const { t, lang } = useTranslation();
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [location, setLocation] = useState("Takes Location....");
+  const [locationState, setLocationState] = useState<LocationState>({
+    status: "loading",
+    key: "location.loading",
+  });
 
   useEffect(() => {
     const updateClock = () => {
@@ -12,36 +27,22 @@ const Time = () => {
       const minutes = String(now.getMinutes()).padStart(2, "0");
       setTime(`${hours}:${minutes}`);
 
-      const days = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      const dayName = days[now.getDay()];
-      const day = now.getDate();
-      const month = months[now.getMonth()];
-      const year = now.getFullYear();
-      setDate(`${dayName}, ${day} ${month} ${year}`);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      };
+      setDate(now.toLocaleDateString(lang === "id" ? "id-ID" : "en-GB", options));
     };
 
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+
+    return () => clearInterval(interval);
+  }, [lang]);
+
+  useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -59,40 +60,63 @@ const Time = () => {
                   data.address.city ||
                   data.address.town ||
                   data.address.village ||
-                  "Unknow City";
-                const country = data.address.country || "Unknow Coutry";
-                setLocation(`${city}, ${country}`);
+                  "location.unknown_city";
+                const country = data.address.country || "location.unknown_country";
+                setLocationState({
+                  status: "success",
+                  data: { city, country },
+                });
               } else {
-                setLocation("Location doesn't found");
+                setLocationState({
+                  status: "error",
+                  key: "location.not_found",
+                });
               }
             } catch (error) {
               console.error("Error getting location data", error);
-              setLocation("Failed get Location");
+              setLocationState({
+                status: "error",
+                key: "location.failed",
+              });
             }
           },
           (error) => {
             console.error("Error getting Location", error);
-            setLocation("Please Allow Location");
+            setLocationState({
+              status: "error",
+              key: "location.allow",
+            });
           }
         );
       } else {
-        setLocation("Geolocation doesn't support this browser");
+        setLocationState({
+          status: "error",
+          key: "location.not_supported",
+        });
       }
     };
 
-    updateClock();
     getLocation();
-    const interval = setInterval(updateClock, 1000);
-
-    return () => clearInterval(interval);
   }, []);
+
+  const displayLocation = locationState.status === "success" && locationState.data
+    ? `${
+        locationState.data.city.startsWith("location.")
+          ? t(locationState.data.city)
+          : locationState.data.city
+      }, ${
+        locationState.data.country.startsWith("location.")
+          ? t(locationState.data.country)
+          : locationState.data.country
+      }`
+    : t(locationState.key || "");
 
   return (
     <div className="justify-end items-center">
       <div className="flex flex-col gap-0 md:gap-1">
         <h1 className="text-6xl drop-shadow-[2px_2px_4px_rgba(0,0,0,0.7)]">{time}</h1>
         <p className="md:text-[20px] text-xl drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)]">{date}</p>
-        <p className="md:text-[20px] text-xl drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)]">{location}</p>
+        <p className="md:text-[20px] text-xl drop-shadow-[2px_2px_4px_rgba(0,0,0,0.9)]">{displayLocation}</p>
       </div>
     </div>
   );

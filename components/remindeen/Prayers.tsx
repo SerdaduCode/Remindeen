@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpIcon } from "@radix-ui/react-icons"
 import Prayer from "./Prayer";
 import Skeleton from "./Skeleton";
+import { useTranslation } from "@/hooks/use-translation";
 
 type PrayerTimes = {
   Imsak: string;
@@ -13,6 +14,7 @@ type PrayerTimes = {
 };
 
 const Prayers = () => {
+  const { t } = useTranslation();
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(true);
@@ -41,7 +43,7 @@ const Prayers = () => {
 
   const getNextPrayer = (times: PrayerTimes | null) => {
     if (!times)
-      return { prayer: "Fajr", time: "00:00", remainingText: "0 menit lagi" };
+      return { prayer: "Fajr", time: "00:00", remainingText: t("prayers.fallback_remaining") };
 
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -71,13 +73,14 @@ const Prayers = () => {
   const formatRemainingTime = (minutesLeft: number) => {
     const hours = Math.floor(minutesLeft / 60);
     const minutes = minutesLeft % 60;
+    const suffix = t("prayers.remaining_suffix");
 
     if (hours > 0 && minutes > 0) {
-      return `${hours} hr ${minutes} min`;
+      return `${hours} ${t("prayers.hour_short")} ${minutes} ${t("prayers.minute_short")}${suffix}`;
     } else if (hours > 0) {
-      return `${hours} hr`;
+      return `${hours} ${t("prayers.hour_short")}${suffix}`;
     } else {
-      return `${minutes} min`;
+      return `${minutes} ${t("prayers.minute_short")}${suffix}`;
     }
   };
 
@@ -116,11 +119,11 @@ const Prayers = () => {
           setTimeRemainingText(next.remainingText);
           setCurrentPrayer(getCurrentPrayer(newTimes));
         } else {
-          setError("Data waktu salat tidak ditemukan.");
+          setError("prayers.error_not_found");
         }
       } catch (error) {
         console.error("Error fetching prayer times", error);
-        setError("Failed to fetch Prayer times");
+        setError("prayers.error_failed");
       }
     };
 
@@ -135,16 +138,16 @@ const Prayers = () => {
           },
           (error) => {
             console.error("Error getting location", error);
-            setError("Gagal mendapatkan lokasi pengguna.");
+            setError("prayers.error_location");
           }
         );
       } else {
-        setError("Geolocation is not supported by this browser.");
+        setError("prayers.error_geolocation");
       }
     };
 
     getLocation();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -157,7 +160,7 @@ const Prayers = () => {
           type: "basic",
             iconUrl: "/wxt.svg",
             title: "Remindeen",
-            message: next.prayer,
+            message: t(`prayers.${next.prayer.toLowerCase()}`),
             eventTime: 50000
         })
       }
@@ -167,9 +170,17 @@ const Prayers = () => {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [prayerTimes]);
+  }, [prayerTimes, t]);
 
-  if (error) return <p>{error}</p>;
+  useEffect(() => {
+    if (prayerTimes) {
+      const next = getNextPrayer(prayerTimes);
+      setNextPrayer(next);
+      setTimeRemainingText(next.remainingText);
+    }
+  }, [prayerTimes, t]);
+
+  if (error) return <p>{error.startsWith("prayers.error") ? t(error) : error}</p>;
   if (!prayerTimes) return <Skeleton />;
 
   return (
@@ -178,7 +189,7 @@ const Prayers = () => {
         className="border-2 border-slate-100 text-slate-100 px-3 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
         onClick={() => setHidden(!hidden)}
       >
-        <Prayer name={nextPrayer?.prayer} time={nextPrayer?.time}>
+        <Prayer name={nextPrayer ? t(`prayers.${nextPrayer.prayer.toLowerCase()}`) : ""} time={nextPrayer?.time}>
           <div className="flex flex-col justify-center items-center">
             <div
               className={`transition-transform ${
@@ -199,7 +210,7 @@ const Prayers = () => {
         {Object.entries(prayerTimes).map(([prayer, time]) => (
           <Prayer
             key={prayer}
-            name={prayer}
+            name={t(`prayers.${prayer.toLowerCase()}`)}
             time={time}
             className={
               prayer === currentPrayer ? "bg-amber-400 text-slate-800 font-bold" : ""
