@@ -244,20 +244,20 @@ export default function Today() {
           onClick={() => setSelectedDomain(null)}
         >
           <div
-            className="bg-[#1a1614] border border-neutral-800/80 text-neutral-100 w-full max-w-[340px] rounded-[24px] overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+            className="bg-white dark:bg-[#1a1614] border border-neutral-200 dark:border-neutral-800/80 text-neutral-900 dark:text-neutral-100 w-full max-w-[340px] rounded-[24px] overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 pb-3 border-b border-neutral-800/40">
+            <div className="flex items-center justify-between p-4 pb-3 border-b border-neutral-200 dark:border-neutral-800/40">
               <div className="flex items-center gap-2.5 min-w-0">
                 <LargeWebsiteIcon domain={selectedDomain} />
-                <span className="font-bold text-base text-neutral-100 tracking-wide truncate max-w-[190px]" title={selectedDomain}>
+                <span className="font-bold text-base text-neutral-900 dark:text-neutral-100 tracking-wide truncate max-w-[190px]" title={selectedDomain}>
                   {selectedDomain}
                 </span>
               </div>
               <button
                 onClick={() => setSelectedDomain(null)}
-                className="text-neutral-400 hover:text-white rounded-full p-1.5 hover:bg-white/5 transition cursor-pointer"
+                className="text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-full p-1.5 hover:bg-neutral-200/60 dark:hover:bg-white/5 transition cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -266,23 +266,23 @@ export default function Today() {
             {/* Metrics Info */}
             <div className="p-4 space-y-4">
               {/* Big metrics row */}
-              <div className="grid grid-cols-3 gap-2 pb-3 border-b border-neutral-800/40 text-center">
+              <div className="grid grid-cols-3 gap-2 pb-3 border-b border-neutral-200 dark:border-neutral-800/40 text-center">
                 <div>
-                  <div className="text-xl font-bold text-neutral-100">{totalVisits}</div>
-                  <div className="text-[10px] text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Visits</div>
+                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{totalVisits}</div>
+                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Visits</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-neutral-100">{formatDuration(avgSessionSec)}</div>
-                  <div className="text-[10px] text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Avg Session</div>
+                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{formatDuration(avgSessionSec)}</div>
+                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Avg Session</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-neutral-100">{percentage}%</div>
-                  <div className="text-[10px] text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Of Today</div>
+                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{percentage}%</div>
+                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Of Today</div>
                 </div>
               </div>
 
               {/* Small row: First and Last visit */}
-              <div className="flex justify-between text-[11px] text-neutral-400 px-0.5">
+              <div className="flex justify-between text-[11px] text-neutral-500 dark:text-neutral-400 px-0.5">
                 <span>First: {formatTime(firstVisit)}</span>
                 <span>Last: {formatTime(lastVisit)}</span>
               </div>
@@ -290,12 +290,12 @@ export default function Today() {
 
             {/* Visit History Section */}
             <div className="px-4 pb-4 flex-1 flex flex-col min-h-0">
-              <h4 className="text-xs font-semibold text-neutral-300 tracking-wider mb-2 px-0.5">
+              <h4 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 tracking-wider mb-2 px-0.5">
                 Visit History
               </h4>
 
               {logsToUse.length === 0 ? (
-                <div className="text-center py-8 text-xs text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800/20">
+                <div className="text-center py-8 text-xs text-neutral-500 bg-neutral-100 dark:bg-neutral-900/20 rounded-xl border border-neutral-200 dark:border-neutral-800/20">
                   No visit history logs found.
                 </div>
               ) : (
@@ -303,15 +303,15 @@ export default function Today() {
                   {logsToUse.map((log) => (
                     <div
                       key={log.id}
-                      className="grid grid-cols-[55px_1fr_auto] items-center gap-2.5 py-2 px-2.5 rounded-xl bg-neutral-900/30 hover:bg-neutral-900/60 border border-neutral-800/20 text-xs transition"
+                      className="grid grid-cols-[55px_1fr_auto] items-center gap-2.5 py-2 px-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900/30 hover:bg-neutral-200/60 dark:hover:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800/20 text-xs transition"
                     >
-                      <span className="text-[10px] text-neutral-400 font-medium">
+                      <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
                         {formatTime(log.timestamp)}
                       </span>
-                      <span className="font-semibold text-neutral-300 truncate pr-1" title={log.title || selectedDomain}>
+                      <span className="font-semibold text-neutral-700 dark:text-neutral-300 truncate pr-1" title={log.title || selectedDomain}>
                         {log.title || selectedDomain}
                       </span>
-                      <span className="font-bold text-neutral-400">
+                      <span className="font-bold text-neutral-500 dark:text-neutral-400">
                         {formatDuration(log.duration)}
                       </span>
                     </div>
