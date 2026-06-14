@@ -49,8 +49,8 @@ const SearchBar = ({ className = "" }: SearchBarProps) => {
             transition-all duration-300 ease-out
             ${
               isFocused
-                ? "bg-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] ring-1 ring-white/30 scale-[1.02]"
-                : "bg-white/20 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.15)] ring-1 ring-white/15 hover:bg-white/15 hover:ring-white/25"
+                ? "bg-white/20 backdrop-blur-xl shadow-[0_16px_32px_rgba(0,0,0,0.3)] ring-1 ring-white/30 scale-[1.02]"
+                : "bg-white/20 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.15)] ring-1 ring-white/15 hover:bg-white/15 hover:ring-white/25"
             }
           `}
         >
@@ -70,14 +70,16 @@ const SearchBar = ({ className = "" }: SearchBarProps) => {
             className="
               w-full bg-transparent py-3.5 pl-11 pr-16
               text-white text-[16px] font-medium tracking-wide
-              placeholder:text-white/40
+              placeholder:text-white/60
               outline-none border-none
               caret-white/80
             "
             autoComplete="off"
             spellCheck={false}
           />
-          <div className="absolute right-4 text-[11px] text-white/25 font-medium tracking-wider pointer-events-none select-none hidden md:block">
+          <div className={`absolute right-4 text-[16px] font-medium tracking-wider pointer-events-none select-none hidden md:block ${
+              isFocused ? "text-white" : "text-white/60"
+            }`}>
             ⌘K
           </div>
         </div>

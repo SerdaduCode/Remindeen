@@ -13,13 +13,19 @@ type PrayerTimes = {
   Isha: string;
 };
 
+type NextPrayerInfo = {
+  prayer: string;
+  time: string;
+  remainingMinutes: number;
+};
+
 const Prayers = () => {
   const { t } = useTranslation();
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(true);
-  const [timeRemainingText, setTimeRemainingText] = useState<string>("");
   const [currentPrayer, setCurrentPrayer] = useState<string | null>(null);
+  const [nextPrayer, setNextPrayer] = useState<NextPrayerInfo | null>(null);
 
   const getCurrentPrayer = (times: PrayerTimes | null) => {
     if (!times) return null;
@@ -41,9 +47,9 @@ const Prayers = () => {
     return lastPrayer;
   };
 
-  const getNextPrayer = (times: PrayerTimes | null) => {
+  const getNextPrayer = (times: PrayerTimes | null): NextPrayerInfo => {
     if (!times)
-      return { prayer: "Fajr", time: "00:00", remainingText: t("prayers.fallback_remaining") };
+      return { prayer: "Fajr", time: "00:00", remainingMinutes: 0 };
 
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -56,7 +62,7 @@ const Prayers = () => {
         return {
           prayer,
           time,
-          remainingText: formatRemainingTime(prayerTime - currentTime),
+          remainingMinutes: prayerTime - currentTime,
         };
       }
     }
@@ -66,10 +72,11 @@ const Prayers = () => {
     return {
       prayer: "Fajr",
       time: times.Fajr,
-      remainingText: formatRemainingTime(fajrTime - currentTime),
+      remainingMinutes: fajrTime - currentTime,
     };
   };
 
+  // Pure formatting — only called during render, uses t() for current language
   const formatRemainingTime = (minutesLeft: number) => {
     const hours = Math.floor(minutesLeft / 60);
     const minutes = minutesLeft % 60;
@@ -91,8 +98,7 @@ const Prayers = () => {
     return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`
   }
 
-  const [nextPrayer, setNextPrayer] = useState(getNextPrayer(prayerTimes));
-
+  // Fetch prayer times — only on mount, no dependency on t
   useEffect(() => {
     const fetchPrayerTimes = async (latitude: number, longitude: number) => {
       try {
@@ -114,9 +120,7 @@ const Prayers = () => {
             Isha: data.data.timings.Isha,
           };
           setPrayerTimes(newTimes);
-          const next = getNextPrayer(newTimes);
-          setNextPrayer(next);
-          setTimeRemainingText(next.remainingText);
+          setNextPrayer(getNextPrayer(newTimes));
           setCurrentPrayer(getCurrentPrayer(newTimes));
         } else {
           setError("prayers.error_not_found");
@@ -147,8 +151,9 @@ const Prayers = () => {
     };
 
     getLocation();
-  }, [t]);
+  }, []);
 
+  // Update next prayer every minute — no dependency on t
   useEffect(() => {
     const interval = setInterval(async () => {
       const next = getNextPrayer(prayerTimes);
@@ -166,22 +171,17 @@ const Prayers = () => {
       }
       
       setNextPrayer(next);
-      setTimeRemainingText(next.remainingText);
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [prayerTimes, t]);
-
-  useEffect(() => {
-    if (prayerTimes) {
-      const next = getNextPrayer(prayerTimes);
-      setNextPrayer(next);
-      setTimeRemainingText(next.remainingText);
-    }
-  }, [prayerTimes, t]);
+  }, [prayerTimes]);
 
   if (error) return <p>{error.startsWith("prayers.error") ? t(error) : error}</p>;
-  if (!prayerTimes) return <Skeleton />;
+  if (!prayerTimes || !nextPrayer) return <Skeleton />;
+
+  // All translation happens here at render time — reactive to language changes automatically
+  const translatedNextPrayerName = t(`prayers.${nextPrayer.prayer.toLowerCase()}`);
+  const translatedRemainingText = formatRemainingTime(nextPrayer.remainingMinutes);
 
   return (
     <div className="flex flex-col gap-2 text-base md:text-xl">
@@ -189,7 +189,7 @@ const Prayers = () => {
         className="border-2 border-slate-100 text-slate-100 px-3 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
         onClick={() => setHidden(!hidden)}
       >
-        <Prayer name={nextPrayer ? t(`prayers.${nextPrayer.prayer.toLowerCase()}`) : ""} time={nextPrayer?.time}>
+        <Prayer name={translatedNextPrayerName} time={nextPrayer.time}>
           <div className="flex flex-col justify-center items-center">
             <div
               className={`transition-transform ${
@@ -200,7 +200,7 @@ const Prayers = () => {
             </div>
           </div>
         </Prayer>
-        <p className="w-full text-sm text-end mr-5 italic">{timeRemainingText}</p>
+        <p className="w-full text-sm text-end mr-5 italic">{translatedRemainingText}</p>
       </div>
       <div
         className={`flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${
