@@ -30,6 +30,7 @@ export default defineConfig({
       "commands",
       "notifications",
       "idle",
+      "alarms",
     ],
 
     side_panel: {

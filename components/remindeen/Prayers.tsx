@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { storage } from "#imports";
 import { ArrowUpIcon } from "@radix-ui/react-icons"
 import Prayer from "./Prayer";
 import Skeleton from "./Skeleton";
@@ -18,6 +19,11 @@ type NextPrayerInfo = {
   time: string;
   remainingMinutes: number;
 };
+
+// Shared with entrypoints/background.ts, which schedules the actual notifications
+const prayerTimesStorage = storage.defineItem<{ times: PrayerTimes; date: string } | null>('local:prayerTimes', {
+  fallback: null,
+});
 
 const Prayers = () => {
   const { t } = useTranslation();
@@ -91,13 +97,6 @@ const Prayers = () => {
     }
   };
 
-  const minutesToTime = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-
-    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`
-  }
-
   // Fetch prayer times — only on mount, no dependency on t
   useEffect(() => {
     const fetchPrayerTimes = async (latitude: number, longitude: number) => {
@@ -122,6 +121,7 @@ const Prayers = () => {
           setPrayerTimes(newTimes);
           setNextPrayer(getNextPrayer(newTimes));
           setCurrentPrayer(getCurrentPrayer(newTimes));
+          await prayerTimesStorage.setValue({ times: newTimes, date });
         } else {
           setError("prayers.error_not_found");
         }
@@ -155,22 +155,8 @@ const Prayers = () => {
 
   // Update next prayer every minute — no dependency on t
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const next = getNextPrayer(prayerTimes);
-      const now = new Date()
-      const currentTime = now.getHours() * 60 + now.getMinutes();
-
-      if (minutesToTime(currentTime) === next.time) {
-        await browser.notifications.create("", {
-          type: "basic",
-            iconUrl: "/wxt.svg",
-            title: "Remindeen",
-            message: t(`prayers.${next.prayer.toLowerCase()}`),
-            eventTime: 50000
-        })
-      }
-      
-      setNextPrayer(next);
+    const interval = setInterval(() => {
+      setNextPrayer(getNextPrayer(prayerTimes));
     }, 60000);
 
     return () => clearInterval(interval);
