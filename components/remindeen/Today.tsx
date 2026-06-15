@@ -206,7 +206,7 @@ export default function Today() {
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <WebsiteIcon domain={site.domain} />
-                  <span className="font-medium text-neutral-700 dark:text-neutral-200 truncate">
+                  <span className="font-medium text-neutral-700 dark:text-neutral-200 truncate max-w-[200px]">
                     {site.domain}
                   </span>
                 </div>
