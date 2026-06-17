@@ -52,7 +52,7 @@ const Time = () => {
               const response = await fetch(
                 `${
                   import.meta.env.VITE_API_GET_LOCATION
-                }?format=json&lat=${latitude}&lon=${longitude}`
+                }?format=json&lat=${latitude}&lon=${longitude}&accept-language=${lang}`
               );
               const data = await response.json();
               if (data && data.address) {
