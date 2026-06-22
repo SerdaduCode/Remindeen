@@ -1,25 +1,15 @@
-import { useEffect, useState } from "react";
 import Prayers from "@/components/remindeen/home/Prayers";
 import Time from "@/components/remindeen/home/Time";
 import Verse from "@/components/remindeen/home/Verse";
 import SearchBar from "@/components/remindeen/home/SearchBar";
-import fetchPicture from "@/components/remindeen/home/Background";
 import { useSettings } from "@/hooks/use-settings";
 
-function HomePage() {
-  const [backgroundUrl, setBackgroundUrl] = useState("");
+interface HomePageProps {
+  backgroundUrl: string;
+}
+
+function HomePage({ backgroundUrl }: HomePageProps) {
   const { system } = useSettings();
-
-  useEffect(() => {
-    const getBackgroundImage = async () => {
-      const picture = await fetchPicture();
-      if (picture) {
-        setBackgroundUrl(picture.url);
-      }
-    };
-
-    getBackgroundImage();
-  }, []);
 
   return (
     <div

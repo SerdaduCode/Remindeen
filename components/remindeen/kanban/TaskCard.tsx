@@ -40,7 +40,7 @@ function TaskCard({ task, onEdit }: TaskCardProps) {
       {...attributes}
       {...listeners}
       onClick={onEdit}
-      className="cursor-pointer space-y-2 rounded-lg border border-white/10 bg-white/5 p-3 text-left text-sm text-white/90 outline-none transition hover:bg-white/10 active:scale-[0.98]"
+      className="cursor-pointer space-y-2 rounded-lg ring-1 ring-white/10 bg-white/[0.06] p-3 text-left text-sm text-white/90 shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none transition hover:bg-white/[0.12] hover:ring-white/20 active:scale-[0.98]"
     >
       <p className="font-medium">{task.title}</p>
       {task.description && <p className="line-clamp-2 text-xs text-white/50">{task.description}</p>}

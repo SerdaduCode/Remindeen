@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useHabits, type Habit } from "@/hooks/use-habits";
 import { useTranslation } from "@/hooks/use-translation";
 import HabitFormModal, { type HabitFormValues } from "./HabitFormModal";
+import HabitSkeleton from "./HabitSkeleton";
 
 type FormState = { mode: "create" } | { mode: "edit"; habit: Habit } | null;
 
@@ -50,7 +51,7 @@ function HabitTracker() {
         </button>
       </div>
 
-      {loading && <p className="text-sm text-white/40">{t("habit.loading")}</p>}
+      {loading && <HabitSkeleton />}
       {error && <p className="text-sm text-red-400">{t("habit.error_loading")}</p>}
 
       {!loading && !error && habits.length === 0 && (
@@ -68,7 +69,7 @@ function HabitTracker() {
             return (
               <div
                 key={habit.id}
-                className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 p-3"
+                className="flex items-center justify-between gap-3 rounded-lg ring-1 ring-white/10 bg-white/[0.06] p-3 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:bg-white/[0.1]"
               >
                 <button
                   type="button"

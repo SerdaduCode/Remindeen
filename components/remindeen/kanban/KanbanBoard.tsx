@@ -10,6 +10,7 @@ import { LayoutGrid, Plus } from "lucide-react";
 import { useTasks, type Task, type TaskStatus } from "@/hooks/use-tasks";
 import { useTranslation } from "@/hooks/use-translation";
 import KanbanColumn from "./KanbanColumn";
+import KanbanSkeleton from "./KanbanSkeleton";
 import TaskFormModal, { type TaskFormValues } from "./TaskFormModal";
 
 const COLUMNS: TaskStatus[] = ["TODO", "DOING", "DONE"];
@@ -88,7 +89,7 @@ function KanbanBoard() {
         </button>
       </div>
 
-      {loading && <p className="text-sm text-white/40">{t("kanban.loading")}</p>}
+      {loading && <KanbanSkeleton />}
       {error && <p className="text-sm text-red-400">{t("kanban.error_loading")}</p>}
 
       {!loading && !error && tasks.length === 0 && (
@@ -101,13 +102,14 @@ function KanbanBoard() {
       {!loading && !error && tasks.length > 0 && (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
           <div className="flex flex-1 gap-3 overflow-x-auto">
-            {COLUMNS.map((status) => (
+            {COLUMNS.map((status, index) => (
               <KanbanColumn
                 key={status}
                 status={status}
                 title={t(COLUMN_LABEL_KEY[status])}
                 tasks={tasksByStatus(status)}
                 onEditTask={(task) => setFormState({ mode: "edit", task })}
+                isFirst={index === 0}
               />
             ))}
           </div>

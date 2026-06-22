@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,13 +60,13 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
     }
   };
 
-  return (
+  return createPortal(
     <div
-      className="absolute inset-0 z-30 flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[380px] rounded-2xl border border-white/10 bg-zinc-900 p-5 text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)]"
+        className="w-full max-w-[380px] rounded-2xl bg-zinc-900/70 p-5 text-white ring-1 ring-white/15 backdrop-blur-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
         onClick={(event) => event.stopPropagation()}
       >
         <h2 className="mb-4 text-sm font-semibold tracking-wide text-white/90">
@@ -160,7 +161,8 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

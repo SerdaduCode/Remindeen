@@ -56,9 +56,9 @@
 
 ## 9. Verification
 
-- [ ] 9.1 Run `al-quotes` locally (`npm run dev`, port 3000) and verify `wxt dev` can sign in, list, create, update, reorder, and delete tasks against it
-- [ ] 9.2 Verify the same flows against prod (`quotes.serdadu.dev`) by building with `.env.local` only
-- [ ] 9.3 Verify session persists across newtab/popup/sidepanel and sign-out propagates to all open contexts
-- [ ] 9.4 Verify on-demand token refresh by forcing/waiting for token expiry and confirming a retried request succeeds without forcing re-sign-in
-- [ ] 9.5 Verify the sign-in prompt is shown (and no `/tasks` or `/habits` request is made) when signed out
+- [x] 9.1 Run `al-quotes` locally (`npm run dev`, port 3000) and verify `wxt dev` can sign in, list, create, update, reorder, and delete tasks against it
+- [x] 9.2 Verify the same flows against prod (`quotes.serdadu.dev`) by building with `.env.local` only
+- [x] 9.3 Verify session persists across newtab/popup/sidepanel and sign-out propagates to all open contexts
+- [x] 9.4 Verify on-demand token refresh by forcing/waiting for token expiry and confirming a retried request succeeds without forcing re-sign-in
+- [x] 9.5 Verify the sign-in prompt is shown (and no `/tasks` or `/habits` request is made) when signed out
 - [x] 9.6 Run lint/typecheck (`tsc --noEmit`) on all touched and newly added files — clean; `wxt build` (prod) and `wxt build --mode development` both verified to bake in the correct API host (`quotes.serdadu.dev` vs `localhost:3000` respectively)
