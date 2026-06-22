@@ -192,5 +192,133 @@ export default defineAppConfig({
       en: 'Geolocation not supported by this browser',
       id: 'Geolocation tidak didukung oleh browser ini',
     },
+    'pager.page_home': {
+      en: 'Home',
+      id: 'Beranda',
+    },
+    'pager.page_orbit': {
+      en: 'Orbit',
+      id: 'Orbit',
+    },
+    'orbit.stats_tasks_suffix': {
+      en: 'tasks',
+      id: 'tugas',
+    },
+    'orbit.stats_focus': {
+      en: 'Focus',
+      id: 'Fokus',
+    },
+    'orbit.stats_no_focus': {
+      en: 'No task in focus',
+      id: 'Tidak ada tugas yang difokuskan',
+    },
+    'orbit.add_task': {
+      en: 'Add task',
+      id: 'Tambah tugas',
+    },
+    'orbit.empty_state': {
+      en: 'Add your first task to start orbiting.',
+      id: 'Tambahkan tugas pertamamu untuk mulai mengorbit.',
+    },
+    'orbit.form.title_label': {
+      en: 'Title',
+      id: 'Judul',
+    },
+    'orbit.form.title_placeholder': {
+      en: "What's the task?",
+      id: 'Apa tugasnya?',
+    },
+    'orbit.form.title_required': {
+      en: 'Title is required',
+      id: 'Judul wajib diisi',
+    },
+    'orbit.form.note_label': {
+      en: 'Note (optional)',
+      id: 'Catatan (opsional)',
+    },
+    'orbit.form.note_placeholder': {
+      en: 'A short reminder...',
+      id: 'Catatan singkat...',
+    },
+    'orbit.form.color_label': {
+      en: 'Color',
+      id: 'Warna',
+    },
+    'orbit.form.create_title': {
+      en: 'New task',
+      id: 'Tugas baru',
+    },
+    'orbit.form.edit_title': {
+      en: 'Edit task',
+      id: 'Ubah tugas',
+    },
+    'orbit.form.save': {
+      en: 'Save',
+      id: 'Simpan',
+    },
+    'orbit.form.cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'orbit.form.delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
+    'orbit.form.delete_confirm': {
+      en: 'Delete this task? This cannot be undone.',
+      id: 'Hapus tugas ini? Tindakan ini tidak dapat dibatalkan.',
+    },
+    'orbit.form.complete': {
+      en: 'Mark complete',
+      id: 'Tandai selesai',
+    },
+    'orbit.form.focus_label': {
+      en: 'Focus task',
+      id: 'Tugas fokus',
+    },
+    'orbit.form.priority_label': {
+      en: 'Priority task',
+      id: 'Tugas prioritas',
+    },
+    'orbit.form.category_label': {
+      en: 'Category',
+      id: 'Kategori',
+    },
+    'orbit.form.category_new_placeholder': {
+      en: 'New category name',
+      id: 'Nama kategori baru',
+    },
+    'orbit.form.category_add': {
+      en: 'Add',
+      id: 'Tambah',
+    },
+    'orbit.filter.all': {
+      en: 'All',
+      id: 'Semua',
+    },
+    'orbit.filter.manage': {
+      en: 'Manage categories',
+      id: 'Kelola kategori',
+    },
+    'orbit.manage.title': {
+      en: 'Manage categories',
+      id: 'Kelola kategori',
+    },
+    'orbit.manage.delete': {
+      en: 'Delete category',
+      id: 'Hapus kategori',
+    },
+    'orbit.manage.delete_confirm': {
+      en: 'Delete this category? Tasks will move to the default category.',
+      id: 'Hapus kategori ini? Tugas akan dipindahkan ke kategori default.',
+    },
+    'orbit.manage.close': {
+      en: 'Done',
+      id: 'Selesai',
+    },
+    'orbit.category.default_name': {
+      en: 'General',
+      id: 'Umum',
+    },
   },
 });

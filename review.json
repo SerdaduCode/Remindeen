@@ -1,0 +1,62 @@
+[
+  {
+    "file": "hooks/use-orbit-tasks.ts",
+    "line": 164,
+    "summary": "repositionTask (and every other mutator: createTask, updateTask, setFocus, setPriority, reassignCategory) computes its next array from the `tasks` value captured in the hook's render closure, so multiple calls fired before a re-render overwrite each other instead of composing.",
+    "failure_scenario": "Dragging a node past two siblings within MIN_NODE_DISTANCE in the same pointermove event: OrbitNode.tsx's checkKnockback (lines 149-165) loops over siblings and calls `onKnockSibling` for each match synchronously, and OrbitView.tsx wires that straight to `repositionTask(id, radius, angle)` with no await/batching. Both calls read the same stale `tasks` snapshot, so the second call's `persist()` overwrites React state and chrome.storage with an array that doesn't include the first sibling's knockback — one of the two repositioned siblings silently snaps back to its old slot (or worse, ends up overlapping again) on the next render/reload."
+  },
+  {
+    "file": "hooks/use-orbit-categories.ts",
+    "line": 28,
+    "summary": "First-run category seeding uses `defaultCategoryName` (derived from `t(\"orbit.category.default_name\")`) at the moment this effect's storage read resolves, but `useSettingsStore` (stores/settings.ts) initializes `language: \"en\"` synchronously and only loads the persisted language asynchronously via a separate `Promise.all(...).then(set(...))` — there's no guarantee the language has loaded before the category seed write happens.",
+    "failure_scenario": "A user with `id` (Indonesian) saved as their language opens the newtab page for the first time after install. `orbitCategoriesStorage.getValue()` resolves with an empty array before `useSettingsStore`'s language Promise resolves, so `defaultCategoryName` is still `t(...)` evaluated against the default `\"en\"` language, seeding the category permanently as \"General\" instead of \"Umum\". Because seeding only happens when `value.length === 0`, this wrong-language name is persisted forever with no re-seed path."
+  },
+  {
+    "file": "components/remindeen/pager/Pager.tsx",
+    "line": 19,
+    "summary": "The global `keydown` listener only excludes INPUT/TEXTAREA/contentEditable targets (`isEditableTarget`), so ArrowLeft/ArrowRight presses while focus is on any other focusable element — including a button inside an open TaskFormModal/ManageCategoriesModal — flip the visible Pager page out from under the modal instead of being ignored.",
+    "failure_scenario": "User opens the task edit modal (a color-preset button, Save, or Delete button has focus) and presses ArrowRight to nudge focus or out of habit: `setActiveIndex` flips from Home to Orbit (or vice versa) since the modal's buttons aren't editable targets, visually yanking the user to the other page while the modal stays mounted underneath, now hidden behind `pointer-events-none`."
+  },
+  {
+    "file": "hooks/use-orbit-tasks.ts",
+    "line": 29,
+    "summary": "normalizeTask only defaults `categoryId` when it is null/undefined (`task.categoryId ?? DEFAULT_CATEGORY_ID`); it never checks that the id still exists in the current categories list, and OrbitView's `handleDeleteCategory` reassigns tasks via a separate hook/storage key (`orbitTasksStorage`) from the one `deleteCategory` writes to (`orbitCategoriesStorage`), with no shared transaction.",
+    "failure_scenario": "If the reassignment's `orbitTasksStorage.setValue` succeeds in updating local state but the write is interrupted (browser/extension reload, storage quota error) between `reassignCategory` and `deleteCategory`, or a second browser tab deletes the category mid-flight, a task can be left with a `categoryId` that matches no entry in `categories` — the filter chips, the category dot, and the TaskFormModal `<Select>` all silently fail to find a match with no error shown to the user."
+  },
+  {
+    "file": "components/remindeen/orbit/OrbitView.tsx",
+    "line": 68,
+    "summary": "markCompleting schedules an unconditional `setTimeout(() => handleAnimationDone(id), 500)` as a fallback for the CSS `onAnimationEnd` callback, but never stores/clears that timer id, so it always fires 500ms later even when the real `onAnimationEnd` already completed the task well before then.",
+    "failure_scenario": "The release animation (`orbit-release`, 420ms) finishes and calls `handleAnimationDone` first; `finalizedIds` blocks the duplicate `completeTask` call, but the leftover timer still fires at 500ms and calls `setCompletingIds` on whatever OrbitView instance is currently mounted — if the user has navigated to a freshly created OrbitView (e.g. extension popup reopened) in that window, this is a stray state update for an id that's no longer relevant, and under React's dev StrictMode/unmount warnings this surfaces as a 'set state on unmounted component' style issue."
+  },
+  {
+    "file": "hooks/use-orbit-tasks.ts",
+    "line": 54,
+    "summary": "`persist()` does a full `JSON`-serialized `storage.setValue(next)` write of the entire task array on every single mutation, including high-frequency drag-driven calls (`repositionTask` fires on every knockback during pointermove, not just on drop).",
+    "failure_scenario": "Dragging a node through a cluster of several siblings triggers one full-array `chrome.storage.local.set` per knocked sibling per pointermove tick — with a couple dozen tasks this turns an ordinary drag gesture into a burst of redundant storage I/O that could instead be batched/debounced (e.g. only persisting position on pointerup, keeping the knockback purely visual/local-state during the drag)."
+  },
+  {
+    "file": "entrypoints/newtab/style.css",
+    "line": 26,
+    "summary": "Five long-running nebula keyframe animations (72s-101s, `infinite`) plus each OrbitNode's halo/ring/blob layers all carry permanent `will-change` and keep animating even when the Orbit page is the inactive Pager tab, since Pager hides pages with `pointer-events-none`/`aria-hidden` rather than unmounting or pausing them.",
+    "failure_scenario": "A user leaves the newtab page open on the Home tab for hours; the Orbit tab's nebulas and every task node's glow layers keep animating and repainting in the background the whole time (CSS animations aren't paused by `pointer-events-none`), burning GPU/battery for a tab the user isn't even looking at, with no `visibilitychange`/tab-active gating — only `prefers-reduced-motion` stops them."
+  },
+  {
+    "file": "components/remindeen/orbit/TaskFormModal.tsx",
+    "line": 18,
+    "summary": "`COLOR_PRESETS` is a literal array hardcoded identically in both TaskFormModal.tsx (line 18) and ManageCategoriesModal.tsx (line 9) instead of being exported once from a shared module.",
+    "failure_scenario": "Changing the palette (adding/removing/reordering a color) requires editing both files in lockstep with no compiler or lint signal tying them together; missing one edit makes the task-creation palette and the category-management palette silently diverge."
+  },
+  {
+    "file": "components/remindeen/orbit/TaskFormModal.tsx",
+    "line": 88,
+    "summary": "TaskFormModal and ManageCategoriesModal each hand-roll their own overlay/click-outside-to-close markup (`fixed/absolute` backdrop + `stopPropagation` panel) rather than sharing one Dialog primitive, and neither implements Escape-to-close the way the sidepanel's `Today.tsx` detail modal already does.",
+    "failure_scenario": "Pressing Escape while the Orbit task-edit or manage-categories modal is open does nothing, while the existing `Today.tsx` modal already closes on Escape — an inconsistent, easy-to-notice UX gap that a shared Dialog component would have prevented by fixing the behavior in one place."
+  },
+  {
+    "file": "components/remindeen/pager/Pager.tsx",
+    "line": 4,
+    "summary": "Pager's types (`children: [ReactNode, ReactNode]`, `labels: [string, string]`, `activeIndex: 0 | 1`) and its width/transform math (`w-[200%]`, `translateX(-${activeIndex * 50}%)`) hardcode exactly two pages, even though it lives in a shared `components/remindeen/pager/` folder implying general reuse.",
+    "failure_scenario": "Adding a third newtab page later (e.g. settings/stats) can't be done by just passing another child — every type signature and the percentage-based layout math has to be rewritten, because the component was built as a bespoke two-page swiper rather than an N-page primitive."
+  }
+]
