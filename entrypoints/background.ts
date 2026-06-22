@@ -1,4 +1,6 @@
 import { storage } from '#imports';
+import { supabase } from '@/lib/supabase';
+import { setStoredSession, toAuthSession } from '@/stores/auth';
 
 interface TopWebsite {
   domain: string;
@@ -308,8 +310,56 @@ async function trackActiveTab() {
   }
 }
 
+type SignInResult = { ok: true } | { ok: false; error: string };
+
+// Initiates the Google OAuth flow. Must run here, not in a UI context: newtab
+// is a fresh document every open and can be torn down mid-flow, which would
+// abandon `launchWebAuthFlow` partway through.
+async function handleSignIn(): Promise<SignInResult> {
+  try {
+    const redirectTo = browser.identity.getRedirectURL();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo, skipBrowserRedirect: true },
+    });
+    if (error || !data.url) {
+      throw error ?? new Error('No OAuth URL returned');
+    }
+
+    const responseUrl = await browser.identity.launchWebAuthFlow({
+      url: data.url,
+      interactive: true,
+    });
+    if (!responseUrl) {
+      throw new Error('Sign-in was cancelled');
+    }
+
+    const code = new URL(responseUrl).searchParams.get('code');
+    if (!code) {
+      throw new Error('No authorization code in redirect');
+    }
+
+    const { data: exchanged, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError || !exchanged.session) {
+      throw exchangeError ?? new Error('Session exchange failed');
+    }
+
+    await setStoredSession(toAuthSession(exchanged.session));
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Sign-in failed' };
+  }
+}
+
 export default defineBackground(() => {
   console.log('Background script loaded!', { id: browser.runtime.id });
+
+  browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.type === 'auth:signIn') {
+      handleSignIn().then(sendResponse);
+      return true; // keep the message channel open for the async sendResponse
+    }
+  });
 
   // Handle extension icon click to open sidepanel
   browser.action.onClicked.addListener(async (tab) => {

@@ -31,6 +31,12 @@ export default defineConfig({
       "notifications",
       "idle",
       "alarms",
+      "identity",
+    ],
+
+    host_permissions: [
+      "https://quotes.serdadu.dev/*",
+      "http://localhost:3000/*",
     ],
 
     side_panel: {
@@ -55,5 +61,13 @@ export default defineConfig({
         strict_min_version: "15.0",
       },
     },
+
+    "oauth2": {
+      "client_id": "246803860856-o3k462jmfdejp2vvfuu8eep08udjnmll.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ]
+    }
   },
 });

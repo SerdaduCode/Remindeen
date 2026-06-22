@@ -196,129 +196,245 @@ export default defineAppConfig({
       en: 'Home',
       id: 'Beranda',
     },
-    'pager.page_orbit': {
-      en: 'Orbit',
-      id: 'Orbit',
+    'pager.page_productivity': {
+      en: 'Productivity',
+      id: 'Produktivitas',
     },
-    'orbit.stats_tasks_suffix': {
-      en: 'tasks',
-      id: 'tugas',
+    'productivity.tab_kanban': {
+      en: 'Kanban',
+      id: 'Kanban',
     },
-    'orbit.stats_focus': {
-      en: 'Focus',
-      id: 'Fokus',
+    'productivity.tab_habit': {
+      en: 'Habit',
+      id: 'Kebiasaan',
     },
-    'orbit.stats_no_focus': {
-      en: 'No task in focus',
-      id: 'Tidak ada tugas yang difokuskan',
+    'auth.sign_in_with_google': {
+      en: 'Sign in with Google',
+      id: 'Masuk dengan Google',
     },
-    'orbit.add_task': {
-      en: 'Add task',
-      id: 'Tambah tugas',
+    'auth.sign_in_prompt_title': {
+      en: 'Sign in to continue',
+      id: 'Masuk untuk melanjutkan',
     },
-    'orbit.empty_state': {
-      en: 'Add your first task to start orbiting.',
-      id: 'Tambahkan tugas pertamamu untuk mulai mengorbit.',
+    'auth.sign_in_prompt_description': {
+      en: 'Your tasks and habits are synced to your account. Sign in with Google to get started.',
+      id: 'Tugas dan kebiasaanmu disinkronkan ke akunmu. Masuk dengan Google untuk mulai.',
     },
-    'orbit.form.title_label': {
-      en: 'Title',
-      id: 'Judul',
+    'auth.sign_out': {
+      en: 'Sign out',
+      id: 'Keluar',
     },
-    'orbit.form.title_placeholder': {
-      en: "What's the task?",
-      id: 'Apa tugasnya?',
+    'auth.signing_in': {
+      en: 'Signing in...',
+      id: 'Sedang masuk...',
     },
-    'orbit.form.title_required': {
-      en: 'Title is required',
-      id: 'Judul wajib diisi',
+    'auth.sign_in_failed': {
+      en: 'Sign-in failed. Please try again.',
+      id: 'Gagal masuk. Silakan coba lagi.',
     },
-    'orbit.form.note_label': {
-      en: 'Note (optional)',
-      id: 'Catatan (opsional)',
+    'kanban.column_todo': {
+      en: 'To Do',
+      id: 'Belum Dikerjakan',
     },
-    'orbit.form.note_placeholder': {
-      en: 'A short reminder...',
-      id: 'Catatan singkat...',
+    'kanban.column_doing': {
+      en: 'Doing',
+      id: 'Sedang Dikerjakan',
     },
-    'orbit.form.color_label': {
-      en: 'Color',
-      id: 'Warna',
-    },
-    'orbit.form.create_title': {
-      en: 'New task',
-      id: 'Tugas baru',
-    },
-    'orbit.form.edit_title': {
-      en: 'Edit task',
-      id: 'Ubah tugas',
-    },
-    'orbit.form.save': {
-      en: 'Save',
-      id: 'Simpan',
-    },
-    'orbit.form.cancel': {
-      en: 'Cancel',
-      id: 'Batal',
-    },
-    'orbit.form.delete': {
-      en: 'Delete',
-      id: 'Hapus',
-    },
-    'orbit.form.delete_confirm': {
-      en: 'Delete this task? This cannot be undone.',
-      id: 'Hapus tugas ini? Tindakan ini tidak dapat dibatalkan.',
-    },
-    'orbit.form.complete': {
-      en: 'Mark complete',
-      id: 'Tandai selesai',
-    },
-    'orbit.form.focus_label': {
-      en: 'Focus task',
-      id: 'Tugas fokus',
-    },
-    'orbit.form.priority_label': {
-      en: 'Priority task',
-      id: 'Tugas prioritas',
-    },
-    'orbit.form.category_label': {
-      en: 'Category',
-      id: 'Kategori',
-    },
-    'orbit.form.category_new_placeholder': {
-      en: 'New category name',
-      id: 'Nama kategori baru',
-    },
-    'orbit.form.category_add': {
-      en: 'Add',
-      id: 'Tambah',
-    },
-    'orbit.filter.all': {
-      en: 'All',
-      id: 'Semua',
-    },
-    'orbit.filter.manage': {
-      en: 'Manage categories',
-      id: 'Kelola kategori',
-    },
-    'orbit.manage.title': {
-      en: 'Manage categories',
-      id: 'Kelola kategori',
-    },
-    'orbit.manage.delete': {
-      en: 'Delete category',
-      id: 'Hapus kategori',
-    },
-    'orbit.manage.delete_confirm': {
-      en: 'Delete this category? Tasks will move to the default category.',
-      id: 'Hapus kategori ini? Tugas akan dipindahkan ke kategori default.',
-    },
-    'orbit.manage.close': {
+    'kanban.column_done': {
       en: 'Done',
       id: 'Selesai',
     },
-    'orbit.category.default_name': {
-      en: 'General',
-      id: 'Umum',
+    'kanban.add_task': {
+      en: 'Add task',
+      id: 'Tambah tugas',
+    },
+    'kanban.empty_state': {
+      en: 'No tasks yet. Add your first task to get started.',
+      id: 'Belum ada tugas. Tambahkan tugas pertamamu untuk mulai.',
+    },
+    'kanban.loading': {
+      en: 'Loading tasks...',
+      id: 'Memuat tugas...',
+    },
+    'kanban.error_loading': {
+      en: 'Failed to load tasks.',
+      id: 'Gagal memuat tugas.',
+    },
+    'kanban.form.title_label': {
+      en: 'Title',
+      id: 'Judul',
+    },
+    'kanban.form.title_placeholder': {
+      en: "What's the task?",
+      id: 'Apa tugasnya?',
+    },
+    'kanban.form.title_required': {
+      en: 'Title is required',
+      id: 'Judul wajib diisi',
+    },
+    'kanban.form.description_label': {
+      en: 'Description (optional)',
+      id: 'Deskripsi (opsional)',
+    },
+    'kanban.form.description_placeholder': {
+      en: 'Add more detail...',
+      id: 'Tambahkan detail...',
+    },
+    'kanban.form.start_date_label': {
+      en: 'Start date',
+      id: 'Tanggal mulai',
+    },
+    'kanban.form.due_date_label': {
+      en: 'Due date',
+      id: 'Tanggal jatuh tempo',
+    },
+    'kanban.form.priority_label': {
+      en: 'Priority',
+      id: 'Prioritas',
+    },
+    'kanban.form.priority_none': {
+      en: 'None',
+      id: 'Tidak ada',
+    },
+    'kanban.form.priority_low': {
+      en: 'Low',
+      id: 'Rendah',
+    },
+    'kanban.form.priority_medium': {
+      en: 'Medium',
+      id: 'Sedang',
+    },
+    'kanban.form.priority_high': {
+      en: 'High',
+      id: 'Tinggi',
+    },
+    'kanban.form.create_title': {
+      en: 'New task',
+      id: 'Tugas baru',
+    },
+    'kanban.form.edit_title': {
+      en: 'Edit task',
+      id: 'Ubah tugas',
+    },
+    'kanban.form.save': {
+      en: 'Save',
+      id: 'Simpan',
+    },
+    'kanban.form.cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'kanban.form.delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
+    'kanban.form.delete_confirm': {
+      en: 'Delete this task? This cannot be undone.',
+      id: 'Hapus tugas ini? Tindakan ini tidak dapat dibatalkan.',
+    },
+    'habit.add_habit': {
+      en: 'Add habit',
+      id: 'Tambah kebiasaan',
+    },
+    'habit.empty_state': {
+      en: 'No habits yet. Add your first habit to start tracking.',
+      id: 'Belum ada kebiasaan. Tambahkan kebiasaan pertamamu untuk mulai melacak.',
+    },
+    'habit.loading': {
+      en: 'Loading habits...',
+      id: 'Memuat kebiasaan...',
+    },
+    'habit.error_loading': {
+      en: 'Failed to load habits.',
+      id: 'Gagal memuat kebiasaan.',
+    },
+    'habit.frequency_daily': {
+      en: 'Daily',
+      id: 'Harian',
+    },
+    'habit.frequency_weekly': {
+      en: 'Weekly',
+      id: 'Mingguan',
+    },
+    'habit.streak_suffix': {
+      en: 'day streak',
+      id: 'hari beruntun',
+    },
+    'habit.check_in': {
+      en: 'Check in',
+      id: 'Tandai selesai',
+    },
+    'habit.checked_in': {
+      en: 'Checked in',
+      id: 'Sudah ditandai',
+    },
+    'habit.form.title_label': {
+      en: 'Title',
+      id: 'Judul',
+    },
+    'habit.form.title_placeholder': {
+      en: "What's the habit?",
+      id: 'Apa kebiasaannya?',
+    },
+    'habit.form.title_required': {
+      en: 'Title is required',
+      id: 'Judul wajib diisi',
+    },
+    'habit.form.description_label': {
+      en: 'Description (optional)',
+      id: 'Deskripsi (opsional)',
+    },
+    'habit.form.description_placeholder': {
+      en: 'Add more detail...',
+      id: 'Tambahkan detail...',
+    },
+    'habit.form.frequency_label': {
+      en: 'Frequency',
+      id: 'Frekuensi',
+    },
+    'habit.form.priority_label': {
+      en: 'Priority',
+      id: 'Prioritas',
+    },
+    'habit.form.priority_none': {
+      en: 'None',
+      id: 'Tidak ada',
+    },
+    'habit.form.priority_low': {
+      en: 'Low',
+      id: 'Rendah',
+    },
+    'habit.form.priority_medium': {
+      en: 'Medium',
+      id: 'Sedang',
+    },
+    'habit.form.priority_high': {
+      en: 'High',
+      id: 'Tinggi',
+    },
+    'habit.form.create_title': {
+      en: 'New habit',
+      id: 'Kebiasaan baru',
+    },
+    'habit.form.edit_title': {
+      en: 'Edit habit',
+      id: 'Ubah kebiasaan',
+    },
+    'habit.form.save': {
+      en: 'Save',
+      id: 'Simpan',
+    },
+    'habit.form.cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'habit.form.delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
+    'habit.form.delete_confirm': {
+      en: 'Delete this habit? This cannot be undone.',
+      id: 'Hapus kebiasaan ini? Tindakan ini tidak dapat dibatalkan.',
     },
   },
 });
