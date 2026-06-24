@@ -436,5 +436,77 @@ export default defineAppConfig({
       en: 'Delete this habit? This cannot be undone.',
       id: 'Hapus kebiasaan ini? Tindakan ini tidak dapat dibatalkan.',
     },
+    'mcp.keys.menu_aria': {
+      en: 'Open menu',
+      id: 'Buka menu',
+    },
+    'mcp.keys.menu_label': {
+      en: 'MCP Keys',
+      id: 'Kunci MCP',
+    },
+    'mcp.keys.title': {
+      en: 'MCP Keys',
+      id: 'Kunci MCP',
+    },
+    'mcp.keys.label_input': {
+      en: 'Label (optional)',
+      id: 'Label (opsional)',
+    },
+    'mcp.keys.label_placeholder': {
+      en: 'e.g. Hermes Agent',
+      id: 'misalnya Hermes Agent',
+    },
+    'mcp.keys.generate': {
+      en: 'Generate',
+      id: 'Buat',
+    },
+    'mcp.keys.loading': {
+      en: 'Loading keys...',
+      id: 'Memuat kunci...',
+    },
+    'mcp.keys.load_error': {
+      en: 'Failed to load keys.',
+      id: 'Gagal memuat kunci.',
+    },
+    'mcp.keys.empty': {
+      en: 'No keys yet.',
+      id: 'Belum ada kunci.',
+    },
+    'mcp.keys.unlabeled': {
+      en: 'Unlabeled',
+      id: 'Tanpa label',
+    },
+    'mcp.keys.created': {
+      en: 'Created',
+      id: 'Dibuat',
+    },
+    'mcp.keys.last_used': {
+      en: 'Last used',
+      id: 'Terakhir dipakai',
+    },
+    'mcp.keys.expires': {
+      en: 'Expires',
+      id: 'Berlaku sampai',
+    },
+    'mcp.keys.never': {
+      en: 'Never',
+      id: 'Belum pernah',
+    },
+    'mcp.keys.revoke_confirm': {
+      en: 'Revoke "{label}"? Any automation using this key will immediately lose access.',
+      id: 'Cabut "{label}"? Automation yang memakai kunci ini akan langsung kehilangan akses.',
+    },
+    'mcp.keys.reveal_warning': {
+      en: "Copy this key now — you won't be able to see it again.",
+      id: 'Salin kunci ini sekarang — kamu tidak akan bisa melihatnya lagi.',
+    },
+    'mcp.keys.done': {
+      en: 'Done',
+      id: 'Selesai',
+    },
+    'mcp.keys.close': {
+      en: 'Close',
+      id: 'Tutup',
+    },
   },
 });

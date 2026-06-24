@@ -7,7 +7,7 @@ TBD - added by add-orbit-todo-page
 ## Requirements
 
 ### Requirement: Two-page paged container
-The newtab entrypoint SHALL render exactly two pages in a horizontally paged container: Page 1 (existing Prayers/Time, Verse, SearchBar content, unchanged) and Page 2 (the Productivity view, containing Kanban and Habit tabs). Only one page SHALL be the active/visible page at a time.
+The newtab entrypoint SHALL render exactly two pages in a horizontally paged container: Page 1 (existing Prayers/Time, Verse, SearchBar content, unchanged) and Page 2 (the Productivity view, showing the Kanban board and Habit list side by side, with no tab control between them). Only one page SHALL be the active/visible page at a time.
 
 #### Scenario: Newtab opens on Page 1
 - **WHEN** the user opens a new tab
@@ -15,7 +15,7 @@ The newtab entrypoint SHALL render exactly two pages in a horizontally paged con
 
 #### Scenario: Page 2 shows the Productivity view
 - **WHEN** the user navigates to Page 2
-- **THEN** the Productivity view is shown, containing Kanban and Habit tabs, instead of the previous orbit view
+- **THEN** the Productivity view is shown, with the Kanban board and Habit list displayed side by side, instead of the previous tabbed Kanban/Habit switcher
 
 ### Requirement: Page navigation controls
 The paged container SHALL provide dot indicators (one per page, with the active page visually distinguished) and previous/next arrow controls that switch the active page when activated.

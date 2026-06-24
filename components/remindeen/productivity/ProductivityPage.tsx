@@ -1,9 +1,10 @@
-import { LogOut } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useTranslation } from "@/hooks/use-translation";
 import KanbanBoard from "../kanban/KanbanBoard";
 import HabitTracker from "../habit/HabitTracker";
 import SignInPrompt from "./SignInPrompt";
+import ProductivityMenu from "./ProductivityMenu";
+import ApiKeysModal from "./ApiKeysModal";
 
 interface ProductivityPageProps {
   backgroundUrl: string;
@@ -14,7 +15,7 @@ const GLASS_PANEL =
 
 function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
   const { isSignedIn, loading, signingIn, error, signIn, signOut } = useAuth();
-  const { t } = useTranslation();
+  const [showApiKeys, setShowApiKeys] = useState(false);
 
   return (
     <div
@@ -34,14 +35,7 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
 
       {!loading && isSignedIn && (
-        <button
-          type="button"
-          onClick={signOut}
-          aria-label={t("auth.sign_out")}
-          className="absolute bottom-4 right-4 z-30 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 text-white/70 backdrop-blur-xl outline-none transition hover:bg-white/20 hover:text-white active:scale-90 focus-visible:ring-2 focus-visible:ring-white/40"
-        >
-          <LogOut className="h-4 w-4" />
-        </button>
+        <ProductivityMenu onSignOut={signOut} onOpenApiKeys={() => setShowApiKeys(true)} />
       )}
 
       {loading ? null : !isSignedIn ? (
@@ -58,6 +52,8 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
           </section>
         </div>
       )}
+
+      {showApiKeys && <ApiKeysModal onClose={() => setShowApiKeys(false)} />}
     </div>
   );
 }
