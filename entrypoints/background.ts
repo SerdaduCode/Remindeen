@@ -1,6 +1,9 @@
 import { storage } from '#imports';
 import { supabase } from '@/lib/supabase';
 import { setStoredSession, toAuthSession } from '@/stores/auth';
+import { apiFetch } from '@/lib/api';
+
+const GOOGLE_CALENDAR_URL = import.meta.env.VITE_API_GOOGLE_CALENDAR as string;
 
 interface TopWebsite {
   domain: string;
@@ -351,6 +354,64 @@ async function handleSignIn(): Promise<SignInResult> {
   }
 }
 
+// Separate from handleSignIn: this requests the additional, more sensitive
+// `calendar.events` scope and forces re-consent (so Google actually returns a
+// refresh token), which should only happen on an explicit "Connect Calendar"
+// action — not on every ordinary sign-in.
+async function handleConnectCalendar(): Promise<SignInResult> {
+  try {
+    const redirectTo = browser.identity.getRedirectURL();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo,
+        skipBrowserRedirect: true,
+        scopes: 'https://www.googleapis.com/auth/calendar.events',
+        queryParams: { access_type: 'offline', prompt: 'consent' },
+      },
+    });
+    if (error || !data.url) {
+      throw error ?? new Error('No OAuth URL returned');
+    }
+
+    const responseUrl = await browser.identity.launchWebAuthFlow({
+      url: data.url,
+      interactive: true,
+    });
+    if (!responseUrl) {
+      throw new Error('Connection was cancelled');
+    }
+
+    const code = new URL(responseUrl).searchParams.get('code');
+    if (!code) {
+      throw new Error('No authorization code in redirect');
+    }
+
+    const { data: exchanged, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError || !exchanged.session) {
+      throw exchangeError ?? new Error('Session exchange failed');
+    }
+
+    // Only the Google-issued refresh token matters here — the Supabase session
+    // from this exchange is otherwise discarded; the user's existing signed-in
+    // session (read by apiFetch) is what authenticates the relay below.
+    const refreshToken = exchanged.session.provider_refresh_token;
+    if (!refreshToken) {
+      throw new Error('Google did not return a refresh token');
+    }
+
+    // Relay only — never written to extension storage.
+    await apiFetch(GOOGLE_CALENDAR_URL, {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Connecting Google Calendar failed' };
+  }
+}
+
 export default defineBackground(() => {
   console.log('Background script loaded!', { id: browser.runtime.id });
 
@@ -358,6 +419,10 @@ export default defineBackground(() => {
     if (message?.type === 'auth:signIn') {
       handleSignIn().then(sendResponse);
       return true; // keep the message channel open for the async sendResponse
+    }
+    if (message?.type === 'auth:connectCalendar') {
+      handleConnectCalendar().then(sendResponse);
+      return true;
     }
   });
 

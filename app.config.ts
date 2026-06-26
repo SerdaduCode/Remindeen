@@ -108,6 +108,30 @@ export default defineAppConfig({
       en: 'Show search bar on new tab',
       id: 'Tampilkan bilah pencarian di tab baru',
     },
+    'settings.calendar': {
+      en: 'Google Calendar',
+      id: 'Google Kalender',
+    },
+    'settings.calendar.description': {
+      en: 'Sync your tasks and habits to your Google Calendar',
+      id: 'Sinkronkan tugas dan kebiasaan Anda ke Google Kalender',
+    },
+    'settings.calendar.connect': {
+      en: 'Connect Google Calendar',
+      id: 'Hubungkan Google Kalender',
+    },
+    'settings.calendar.connecting': {
+      en: 'Connecting…',
+      id: 'Menghubungkan…',
+    },
+    'settings.calendar.disconnect': {
+      en: 'Disconnect',
+      id: 'Putuskan',
+    },
+    'settings.calendar.connected': {
+      en: 'Connected',
+      id: 'Terhubung',
+    },
     'prayers.imsak': {
       en: 'Imsak',
       id: 'Imsak',
