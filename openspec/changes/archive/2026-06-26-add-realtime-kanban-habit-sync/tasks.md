@@ -16,10 +16,10 @@
 
 ## 4. Verification
 
-- [ ] 4.1 Manually verify: with the board open, create/update (status + drag-reorder)/delete a task via the al-quotes MCP tools or REST directly (not through the board's own UI) — confirm the board updates without a manual refresh.
-- [ ] 4.2 Manually verify: with the habit tracker open, create/update/delete a habit and check it in via MCP/REST directly — confirm the tracker updates without a manual refresh.
-- [ ] 4.3 Manually verify: creating/updating a task or habit through the extension's own form does not produce a duplicate card/entry once the echoed realtime event arrives.
-- [ ] 4.4 Manually verify: with one `newtab` page open (both panels mounted), confirm only one Pusher connection exists (Pusher debug console or a temporary log) — not two.
-- [ ] 4.5 Manually verify: sign out and confirm the Pusher connection disconnects.
-- [ ] 4.6 Manually verify: simulate a disconnect (e.g. toggle network) and reconnect — confirm the open page refetches once on reconnect.
+- [x] 4.1 Manually verify: with the board open, create/update (status + drag-reorder)/delete a task via the al-quotes MCP tools or REST directly (not through the board's own UI) — confirm the board updates without a manual refresh.
+- [x] 4.2 Manually verify: with the habit tracker open, create/update/delete a habit and check it in via MCP/REST directly — confirm the tracker updates without a manual refresh.
+- [x] 4.3 Manually verify: creating/updating a task or habit through the extension's own form does not produce a duplicate card/entry once the echoed realtime event arrives.
+- [x] 4.4 Manually verify: with one `newtab` page open (both panels mounted), confirm only one Pusher connection exists (Pusher debug console or a temporary log) — not two.
+- [x] 4.5 Manually verify: sign out and confirm the Pusher connection disconnects.
+- [x] 4.6 Manually verify: simulate a disconnect (e.g. toggle network) and reconnect — confirm the open page refetches once on reconnect.
 - [x] 4.7 Run `npm run compile`.
