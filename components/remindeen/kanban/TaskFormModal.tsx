@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Task, TaskInput, TaskPriority } from "@/hooks/use-tasks";
+import { useTaskComments } from "@/hooks/use-task-comments";
 import { useTranslation } from "@/hooks/use-translation";
 
 export interface TaskFormValues extends TaskInput {}
@@ -151,6 +152,8 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
             </Select>
           </div>
 
+          {isEdit && initial && <TaskComments taskId={initial.id} />}
+
           <div className="flex items-center gap-2 pt-1">
             {isEdit && onDelete && (
               <Button
@@ -180,6 +183,139 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
       </div>
     </div>,
     document.body,
+  );
+}
+
+function TaskComments({ taskId }: { taskId: number }) {
+  const { t } = useTranslation();
+  const { comments, addComment, editComment, deleteComment } = useTaskComments(taskId);
+  const [newBody, setNewBody] = useState("");
+  const [sending, setSending] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingBody, setEditingBody] = useState("");
+
+  const handleSend = async () => {
+    const body = newBody.trim();
+    if (!body || sending) return;
+    setSending(true);
+    try {
+      await addComment(body);
+      setNewBody("");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const startEdit = (id: number, body: string) => {
+    setEditingId(id);
+    setEditingBody(body);
+  };
+
+  const saveEdit = async () => {
+    const body = editingBody.trim();
+    if (!body || editingId === null) return;
+    await editComment(editingId, body);
+    setEditingId(null);
+  };
+
+  const handleDeleteComment = async (id: number) => {
+    if (window.confirm(t("kanban.form.comments_delete_confirm"))) {
+      await deleteComment(id);
+    }
+  };
+
+  return (
+    <div className="space-y-2 border-t border-white/10 pt-3">
+      <Label className="text-white/70">{t("kanban.form.comments_label")}</Label>
+
+      {comments.length === 0 ? (
+        <p className="text-xs text-white/40">{t("kanban.form.comments_empty")}</p>
+      ) : (
+        <div className="max-h-36 space-y-2 overflow-y-auto pr-1">
+          {comments.map((comment) => (
+            <div key={comment.id} className="rounded-lg bg-white/5 p-2 text-xs text-white/80">
+              {editingId === comment.id ? (
+                <div className="space-y-1.5">
+                  <Input
+                    value={editingBody}
+                    onChange={(event) => setEditingBody(event.target.value)}
+                    className="border-white/15 bg-white/5 text-white"
+                    autoFocus
+                  />
+                  <div className="flex justify-end gap-1.5">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 cursor-pointer px-2 text-[11px] text-white/70 hover:bg-white/10 hover:text-white"
+                      onClick={() => setEditingId(null)}
+                    >
+                      {t("kanban.form.comments_cancel")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="h-6 cursor-pointer px-2 text-[11px]"
+                      onClick={saveEdit}
+                    >
+                      {t("kanban.form.comments_save")}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="whitespace-pre-wrap">{comment.body}</p>
+                  <div className="mt-1 flex items-center justify-between">
+                    <span className="text-[10px] text-white/30">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(comment.id, comment.body)}
+                        className="cursor-pointer text-[10px] text-white/40 hover:text-white/70"
+                      >
+                        {t("kanban.form.comments_edit")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="cursor-pointer text-[10px] text-white/40 hover:text-red-400"
+                      >
+                        {t("kanban.form.comments_delete")}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <Input
+          value={newBody}
+          onChange={(event) => setNewBody(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              handleSend();
+            }
+          }}
+          placeholder={t("kanban.form.comments_placeholder")}
+          className="border-white/15 bg-white/5 text-white placeholder:text-white/30"
+        />
+        <Button
+          type="button"
+          disabled={!newBody.trim() || sending}
+          className="cursor-pointer active:scale-[0.98]"
+          onClick={handleSend}
+        >
+          {t("kanban.form.comments_send")}
+        </Button>
+      </div>
+    </div>
   );
 }
 

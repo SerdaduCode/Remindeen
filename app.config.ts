@@ -332,6 +332,42 @@ export default defineAppConfig({
       en: 'Delete this task? This cannot be undone.',
       id: 'Hapus tugas ini? Tindakan ini tidak dapat dibatalkan.',
     },
+    'kanban.form.comments_label': {
+      en: 'Comments',
+      id: 'Komentar',
+    },
+    'kanban.form.comments_empty': {
+      en: 'No comments yet.',
+      id: 'Belum ada komentar.',
+    },
+    'kanban.form.comments_placeholder': {
+      en: 'Add a comment...',
+      id: 'Tambahkan komentar...',
+    },
+    'kanban.form.comments_send': {
+      en: 'Send',
+      id: 'Kirim',
+    },
+    'kanban.form.comments_edit': {
+      en: 'Edit',
+      id: 'Ubah',
+    },
+    'kanban.form.comments_delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
+    'kanban.form.comments_save': {
+      en: 'Save',
+      id: 'Simpan',
+    },
+    'kanban.form.comments_cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'kanban.form.comments_delete_confirm': {
+      en: 'Delete this comment? This cannot be undone.',
+      id: 'Hapus komentar ini? Tindakan ini tidak dapat dibatalkan.',
+    },
     'habit.add_habit': {
       en: 'Add habit',
       id: 'Tambah kebiasaan',
