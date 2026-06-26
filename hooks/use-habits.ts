@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { apiFetch } from '@/lib/api'
 import { computeCurrentStreak, isCheckedInForCurrentPeriod } from '@/lib/habit-streak'
+import { acquirePrivateChannel, releasePrivateChannel } from '@/lib/pusher-client'
+import { getStoredSession } from '@/stores/auth'
 import type { TaskPriority } from '@/hooks/use-tasks'
 
 const HABITS_URL = import.meta.env.VITE_API_HABITS as string
@@ -72,6 +74,73 @@ export function useHabits(enabled: boolean) {
   useEffect(() => {
     refresh()
   }, [refresh])
+
+  useEffect(() => {
+    if (!enabled) return
+
+    let active = true
+    let channel: import('pusher-js').Channel | null = null
+    let pusherClient: import('pusher-js').default | null = null
+    let hasConnectedOnce = false
+
+    const upsertHabit = (habit: Habit) =>
+      setHabits((prev) =>
+        prev.some((h) => h.id === habit.id) ? prev.map((h) => (h.id === habit.id ? habit : h)) : [...prev, habit]
+      )
+    const removeHabit = ({ id }: { id: number }) => {
+      setHabits((prev) => prev.filter((h) => h.id !== id))
+      setCheckInsByHabit((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+    }
+    const mergeCheckIn = (checkInRecord: HabitCheckIn) =>
+      setCheckInsByHabit((prev) => {
+        const existing = prev[checkInRecord.habitId] ?? []
+        const alreadyHasPeriod = existing.some((entry) => entry.periodStart === checkInRecord.periodStart)
+        return {
+          ...prev,
+          [checkInRecord.habitId]: alreadyHasPeriod ? existing : [checkInRecord, ...existing],
+        }
+      })
+    const handleStateChange = ({ current }: { current: string }) => {
+      if (current === 'connected') {
+        if (hasConnectedOnce) refresh()
+        hasConnectedOnce = true
+      }
+    }
+
+    getStoredSession().then((session) => {
+      if (!session || !active) return
+      const acquired = acquirePrivateChannel(session.user.id)
+      if (!active) {
+        releasePrivateChannel()
+        return
+      }
+      pusherClient = acquired.client
+      channel = acquired.channel
+      channel.bind('habit.created', upsertHabit)
+      channel.bind('habit.updated', upsertHabit)
+      channel.bind('habit.deleted', removeHabit)
+      channel.bind('habit.checkedIn', mergeCheckIn)
+      pusherClient.connection.bind('state_change', handleStateChange)
+    })
+
+    return () => {
+      active = false
+      if (channel) {
+        channel.unbind('habit.created', upsertHabit)
+        channel.unbind('habit.updated', upsertHabit)
+        channel.unbind('habit.deleted', removeHabit)
+        channel.unbind('habit.checkedIn', mergeCheckIn)
+      }
+      if (pusherClient) {
+        pusherClient.connection.unbind('state_change', handleStateChange)
+        releasePrivateChannel()
+      }
+    }
+  }, [enabled, refresh])
 
   const createHabit = async (input: HabitInput) => {
     const created = await apiFetch<Habit>(HABITS_URL, {

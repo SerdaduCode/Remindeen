@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { apiFetch } from '@/lib/api'
+import { acquirePrivateChannel, releasePrivateChannel } from '@/lib/pusher-client'
+import { getStoredSession } from '@/stores/auth'
 
 const TASKS_URL = import.meta.env.VITE_API_TASKS as string
 
@@ -54,6 +56,55 @@ export function useTasks(enabled: boolean) {
   useEffect(() => {
     refresh()
   }, [refresh])
+
+  useEffect(() => {
+    if (!enabled) return
+
+    let active = true
+    let channel: import('pusher-js').Channel | null = null
+    let pusherClient: import('pusher-js').default | null = null
+    let hasConnectedOnce = false
+
+    const upsert = (task: Task) =>
+      setTasks((prev) =>
+        prev.some((t) => t.id === task.id) ? prev.map((t) => (t.id === task.id ? task : t)) : [...prev, task]
+      )
+    const remove = ({ id }: { id: number }) => setTasks((prev) => prev.filter((t) => t.id !== id))
+    const handleStateChange = ({ current }: { current: string }) => {
+      if (current === 'connected') {
+        if (hasConnectedOnce) refresh()
+        hasConnectedOnce = true
+      }
+    }
+
+    getStoredSession().then((session) => {
+      if (!session || !active) return
+      const acquired = acquirePrivateChannel(session.user.id)
+      if (!active) {
+        releasePrivateChannel()
+        return
+      }
+      pusherClient = acquired.client
+      channel = acquired.channel
+      channel.bind('task.created', upsert)
+      channel.bind('task.updated', upsert)
+      channel.bind('task.deleted', remove)
+      pusherClient.connection.bind('state_change', handleStateChange)
+    })
+
+    return () => {
+      active = false
+      if (channel) {
+        channel.unbind('task.created', upsert)
+        channel.unbind('task.updated', upsert)
+        channel.unbind('task.deleted', remove)
+      }
+      if (pusherClient) {
+        pusherClient.connection.unbind('state_change', handleStateChange)
+        releasePrivateChannel()
+      }
+    }
+  }, [enabled, refresh])
 
   const createTask = async (input: TaskInput) => {
     const created = await apiFetch<Task>(TASKS_URL, {
