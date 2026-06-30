@@ -79,7 +79,7 @@ function HabitTracker() {
   };
 
   return (
-    <div className="relative flex h-full flex-col gap-3 p-4">
+    <div className="relative flex flex-col gap-3 p-4 max-h-[544px]">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1">
           <button
