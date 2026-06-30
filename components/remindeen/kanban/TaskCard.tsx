@@ -19,9 +19,10 @@ const PRIORITY_VARIANT: Record<NonNullable<Task["priority"]>, "secondary" | "def
 interface TaskCardProps {
   task: Task;
   onEdit: () => void;
+  dragging?: boolean;
 }
 
-function TaskCard({ task, onEdit }: TaskCardProps) {
+function TaskCard({ task, onEdit, dragging = false }: TaskCardProps) {
   const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: String(task.id),
@@ -35,12 +36,16 @@ function TaskCard({ task, onEdit }: TaskCardProps) {
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      onClick={onEdit}
-      className="cursor-pointer space-y-2 rounded-lg ring-1 ring-white/10 bg-white/[0.06] p-3 text-left text-sm text-white/90 shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none transition hover:bg-white/[0.12] hover:ring-white/20 active:scale-[0.98]"
+      ref={dragging ? undefined : setNodeRef}
+      style={dragging ? undefined : style}
+      {...(dragging ? {} : attributes)}
+      {...(dragging ? {} : listeners)}
+      onClick={dragging ? undefined : onEdit}
+      className={`space-y-2 rounded-lg ring-1 bg-white/[0.06] p-3 text-left text-sm text-white/90 outline-none ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        dragging
+          ? "scale-105 rotate-1 cursor-grabbing ring-white/30 shadow-[0_16px_32px_-8px_rgba(0,0,0,0.5)] transition-none"
+          : "cursor-pointer ring-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-[transform,box-shadow,background-color] duration-200 hover:bg-white/[0.12] hover:ring-white/20 active:scale-[0.98]"
+      }`}
     >
       <p className="font-medium">{task.title}</p>
       {task.description && <p className="line-clamp-2 text-xs text-white/50">{task.description}</p>}

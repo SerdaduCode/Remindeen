@@ -18,6 +18,7 @@ export interface Task {
   priority: TaskPriority | null
   status: TaskStatus
   position: number
+  syncToCalendar: boolean
   createdAt: string
   updatedAt: string
 }
@@ -28,6 +29,7 @@ export interface TaskInput {
   startDate?: string
   dueDate?: string
   priority?: TaskPriority | null
+  syncToCalendar?: boolean
 }
 
 export function useTasks(enabled: boolean) {

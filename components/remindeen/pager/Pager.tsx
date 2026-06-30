@@ -27,22 +27,18 @@ function Pager({ children, labels }: PagerProps) {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-zinc-950">
-      <div
-        className="flex h-full w-[200%] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ transform: `translateX(-${activeIndex * 50}%)` }}
-      >
-        {children.map((page, index) => (
-          <div
-            key={index}
-            aria-hidden={activeIndex !== index}
-            className={`relative h-full w-1/2 shrink-0 overflow-hidden ${
-              activeIndex === index ? "" : "pointer-events-none"
-            }`}
-          >
-            {page}
-          </div>
-        ))}
-      </div>
+      {children.map((page, index) => (
+        <div
+          key={index}
+          aria-hidden={activeIndex !== index}
+          style={{ left: activeIndex === index ? "0" : index === 0 ? "-100%" : "100%" }}
+          className={`absolute inset-y-0 w-full overflow-hidden transition-[left] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            activeIndex === index ? "" : "pointer-events-none"
+          }`}
+        >
+          {page}
+        </div>
+      ))}
 
       <button
         type="button"

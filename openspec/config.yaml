@@ -1,5 +1,10 @@
 schema: spec-driven
 
 context: |
-  Tech stack: WXT, React, PNPM, TailwindCSS
-  Domain: Islamic web extension
+  Tech stack: WXT (browser extension framework), React 19, TypeScript, PNPM, TailwindCSS v4.
+  UI: Radix UI / shadcn-style components (components/ui), dnd-kit for drag-and-drop.
+  State: Zustand (stores/).
+  Backend: Supabase (auth + database), Pusher for realtime sync.
+  Domain: Remindeen, an Islamic productivity browser extension. Core features:
+    prayer time reminders, Kanban task board, habit tracking, Google Calendar
+    sync, and MCP key management for AI agent integrations.

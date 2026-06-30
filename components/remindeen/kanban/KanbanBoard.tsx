@@ -1,16 +1,20 @@
 import { useState } from "react";
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
+  pointerWithin,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import { LayoutGrid, Plus } from "lucide-react";
 import { useTasks, type Task, type TaskStatus } from "@/hooks/use-tasks";
 import { useTranslation } from "@/hooks/use-translation";
 import KanbanColumn from "./KanbanColumn";
 import KanbanSkeleton from "./KanbanSkeleton";
+import TaskCard from "./TaskCard";
 import TaskFormModal, { type TaskFormValues } from "./TaskFormModal";
 
 const COLUMNS: TaskStatus[] = ["TODO", "DOING", "DONE"];
@@ -27,12 +31,19 @@ function KanbanBoard() {
     useTasks(true);
   const { t } = useTranslation();
   const [formState, setFormState] = useState<FormState>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
 
   const tasksByStatus = (status: TaskStatus) =>
     tasks.filter((task) => task.status === status).sort((a, b) => a.position - b.position);
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const task = tasks.find((t) => t.id === Number(event.active.id));
+    setActiveTask(task ?? null);
+  };
+
   const handleDragEnd = async (event: DragEndEvent) => {
+    setActiveTask(null);
     const { active, over } = event;
     if (!over) return;
 
@@ -100,7 +111,12 @@ function KanbanBoard() {
       )}
 
       {!loading && !error && tasks.length > 0 && (
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={pointerWithin}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
           <div className="flex flex-1 gap-3 overflow-x-auto">
             {COLUMNS.map((status, index) => (
               <KanbanColumn
@@ -113,6 +129,9 @@ function KanbanBoard() {
               />
             ))}
           </div>
+          <DragOverlay>
+            {activeTask && <TaskCard task={activeTask} onEdit={() => {}} dragging />}
+          </DragOverlay>
         </DndContext>
       )}
 

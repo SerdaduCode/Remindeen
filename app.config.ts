@@ -332,6 +332,30 @@ export default defineAppConfig({
       en: 'High',
       id: 'Tinggi',
     },
+    'kanban.form.status_label': {
+      en: 'Status',
+      id: 'Status',
+    },
+    'kanban.form.status_todo': {
+      en: 'To Do',
+      id: 'Akan Dikerjakan',
+    },
+    'kanban.form.status_doing': {
+      en: 'Doing',
+      id: 'Dikerjakan',
+    },
+    'kanban.form.status_done': {
+      en: 'Done',
+      id: 'Selesai',
+    },
+    'kanban.form.sync_calendar_label': {
+      en: 'Sync to Calendar',
+      id: 'Sinkron ke Kalender',
+    },
+    'kanban.form.sync_calendar_hint_disconnected': {
+      en: 'Connect Google Calendar in settings to enable this.',
+      id: 'Hubungkan Google Calendar di pengaturan untuk mengaktifkan ini.',
+    },
     'kanban.form.create_title': {
       en: 'New task',
       id: 'Tugas baru',
