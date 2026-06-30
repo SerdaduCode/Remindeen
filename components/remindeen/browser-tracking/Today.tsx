@@ -1,5 +1,6 @@
 import { storage } from '#imports';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Globe, RefreshCw, X } from 'lucide-react';
 import { useTranslation } from '@/hooks/use-translation';
 import ConfirmDeletePanel from '@/components/ui/confirm-delete-panel';
@@ -26,21 +27,21 @@ const recentActivityStorage = storage.defineItem<ActivityLog[]>('local:recentAct
   fallback: [],
 });
 
-const LIMIT_TODAY_WEBSITES = 3;
+const LIMIT_TODAY_WEBSITES = 10;
 
 function WebsiteIcon({ domain }: { domain: string }) {
   const [error, setError] = useState(false);
   const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
   if (error) {
-    return <Globe className="h-3.5 w-3.5 text-neutral-400" />;
+    return <Globe className="h-3.5 w-3.5 text-white/40" />;
   }
 
   return (
     <img
       src={faviconUrl}
       alt={domain}
-      className="h-3.5 w-3.5 rounded flex-shrink-0 object-contain bg-neutral-800/30 p-0.5"
+      className="h-3.5 w-3.5 rounded flex-shrink-0 object-contain bg-white/10 p-0.5"
       onError={() => setError(true)}
     />
   );
@@ -51,14 +52,14 @@ function LargeWebsiteIcon({ domain }: { domain: string }) {
   const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
   if (error) {
-    return <Globe className="h-5 w-5 text-neutral-400" />;
+    return <Globe className="h-5 w-5 text-white/40" />;
   }
 
   return (
     <img
       src={faviconUrl}
       alt={domain}
-      className="h-5 w-5 rounded flex-shrink-0 object-contain bg-neutral-800/30 p-0.5"
+      className="h-5 w-5 rounded flex-shrink-0 object-contain bg-white/10 p-0.5"
       onError={() => setError(true)}
     />
   );
@@ -143,16 +144,6 @@ export default function Today() {
   const firstVisit = timestamps.length > 0 ? Math.min(...timestamps) : 0;
   const lastVisit = timestamps.length > 0 ? Math.max(...timestamps) : 0;
 
-  const formatTotalTime = (seconds: number): string => {
-    if (seconds < 60) return '<1m';
-    const minutes = Math.round(seconds / 60);
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const remMins = minutes % 60;
-    if (remMins === 0) return `${hours}h`;
-    return `${hours}h ${remMins}m`;
-  };
-
   const formatDuration = (seconds: number): string => {
     if (seconds === 0) return '0s';
     if (seconds < 60) return '<1m';
@@ -171,11 +162,11 @@ export default function Today() {
   };
 
   return (
-    <div className="rounded-2xl border border-neutral-200/10 dark:border-neutral-800/60 bg-neutral-100/40 dark:bg-[#1e1b18] p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-3.5">
+    <div className="relative flex h-full flex-col p-4">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-base">🐥</span>
-          <h3 className="font-semibold text-neutral-800 dark:text-neutral-200 text-sm">
+          <h3 className="text-sm font-semibold text-white/90">
             {t('widgets.today')}
           </h3>
         </div>
@@ -183,7 +174,7 @@ export default function Today() {
           <button
             onClick={() => setShowResetConfirm(true)}
             title="Reset Stats"
-            className="text-neutral-400 hover:text-red-400 transition cursor-pointer"
+            className="text-white/40 hover:text-red-400 transition cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
@@ -195,30 +186,27 @@ export default function Today() {
           message="Reset your activity logs?"
           detail="This cannot be undone."
           confirmLabel="Reset"
-          messageClassName="text-sm font-medium text-neutral-800 dark:text-neutral-200"
-          detailClassName="text-xs text-neutral-500 dark:text-neutral-400"
-          cancelClassName="cursor-pointer text-neutral-500 dark:text-neutral-400 active:scale-[0.98] hover:bg-neutral-200/60 dark:hover:bg-white/5 hover:text-neutral-800 dark:hover:text-neutral-200"
           onConfirm={resetStats}
           onCancel={() => setShowResetConfirm(false)}
         />
       ) : topWebsites.length === 0 ? (
-        <div className="text-center py-6 text-xs text-neutral-400">
+        <div className="text-center py-6 text-xs text-white/40">
           No activity tracked yet today.
         </div>
       ) : (
-        <div className="divide-y divide-neutral-200/5 dark:divide-neutral-800/40">
+        <div className="divide-y divide-white/10 overflow-y-auto max-h-[390px] overflow-x-hidden glass-scrollbar">
           {displayedTopWebsites.map((site, index) => {
             const minutes = Math.max(1, Math.round(site.duration / 60));
             const isGreenDot = index < 4;
             return (
               <div
                 key={site.domain}
-                className="flex items-center justify-between py-2.5 text-xs first:pt-0 last:pb-0 cursor-pointer hover:bg-neutral-200/40 dark:hover:bg-neutral-800/30 px-2 -mx-2 rounded-xl transition"
+                className="flex items-center justify-between py-2.5 text-xs first:pt-0 last:pb-0 cursor-pointer hover:bg-white/5 px-2 -mx-2 rounded-xl transition"
                 onClick={() => setSelectedDomain(site.domain)}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <WebsiteIcon domain={site.domain} />
-                  <span className="font-medium text-neutral-700 dark:text-neutral-200 truncate max-w-[200px]">
+                  <span className="font-medium text-white/80 truncate max-w-[200px]">
                     {site.domain}
                   </span>
                 </div>
@@ -228,7 +216,7 @@ export default function Today() {
                       isGreenDot ? 'bg-emerald-500' : 'bg-amber-600'
                     }`}
                   />
-                  <span className="font-semibold text-neutral-600 dark:text-neutral-400">
+                  <span className="font-semibold text-white/60">
                     {minutes}m
                   </span>
                 </div>
@@ -241,7 +229,7 @@ export default function Today() {
       {!showResetConfirm && topWebsites.length > LIMIT_TODAY_WEBSITES && (
         <button
           onClick={() => setShowAllTop(!showAllTop)}
-          className="w-full text-center text-[11px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition py-2 mt-2 border-t border-neutral-200/10 dark:border-neutral-800/40 cursor-pointer"
+          className="w-full text-center text-[11px] font-medium text-white/50 hover:text-white/90 transition py-2 mt-2 border-t border-white/10 cursor-pointer"
         >
           {showAllTop
             ? t('widgets.show_less')
@@ -249,27 +237,29 @@ export default function Today() {
         </button>
       )}
 
-      {/* Detail Modal */}
-      {selectedDomain && (
+      {/* Detail modal — portaled so it isn't confined by the parent glass
+          panel's backdrop-blur, which would otherwise act as a containing
+          block for fixed-position descendants and clip the overlay. */}
+      {selectedDomain && createPortal(
         <div
-          className="fixed inset-0 bg-neutral-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-sm"
           onClick={() => setSelectedDomain(null)}
         >
           <div
-            className="bg-white dark:bg-[#1a1614] border border-neutral-200 dark:border-neutral-800/80 text-neutral-900 dark:text-neutral-100 w-full max-w-[340px] rounded-[24px] overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+            className="w-full max-w-[340px] max-h-[85vh] flex flex-col overflow-hidden rounded-[24px] bg-zinc-900/70 text-white ring-1 ring-white/15 backdrop-blur-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 pb-3 border-b border-neutral-200 dark:border-neutral-800/40">
+            <div className="flex items-center justify-between p-4 pb-3 border-b border-white/10">
               <div className="flex items-center gap-2.5 min-w-0">
                 <LargeWebsiteIcon domain={selectedDomain} />
-                <span className="font-bold text-base text-neutral-900 dark:text-neutral-100 tracking-wide truncate max-w-[190px]" title={selectedDomain}>
+                <span className="font-bold text-base tracking-wide truncate max-w-[190px]" title={selectedDomain}>
                   {selectedDomain}
                 </span>
               </div>
               <button
                 onClick={() => setSelectedDomain(null)}
-                className="text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-full p-1.5 hover:bg-neutral-200/60 dark:hover:bg-white/5 transition cursor-pointer"
+                className="text-white/40 hover:text-white rounded-full p-1.5 hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -278,23 +268,23 @@ export default function Today() {
             {/* Metrics Info */}
             <div className="p-4 space-y-4">
               {/* Big metrics row */}
-              <div className="grid grid-cols-3 gap-2 pb-3 border-b border-neutral-200 dark:border-neutral-800/40 text-center">
+              <div className="grid grid-cols-3 gap-2 pb-3 border-b border-white/10 text-center">
                 <div>
-                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{totalVisits}</div>
-                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Visits</div>
+                  <div className="text-xl font-bold">{totalVisits}</div>
+                  <div className="text-[10px] text-white/50 font-semibold tracking-wide uppercase mt-0.5">Visits</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{formatDuration(avgSessionSec)}</div>
-                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Avg Session</div>
+                  <div className="text-xl font-bold">{formatDuration(avgSessionSec)}</div>
+                  <div className="text-[10px] text-white/50 font-semibold tracking-wide uppercase mt-0.5">Avg Session</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{percentage}%</div>
-                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold tracking-wide uppercase mt-0.5">Of Today</div>
+                  <div className="text-xl font-bold">{percentage}%</div>
+                  <div className="text-[10px] text-white/50 font-semibold tracking-wide uppercase mt-0.5">Of Today</div>
                 </div>
               </div>
 
               {/* Small row: First and Last visit */}
-              <div className="flex justify-between text-[11px] text-neutral-500 dark:text-neutral-400 px-0.5">
+              <div className="flex justify-between text-[11px] text-white/50 px-0.5">
                 <span>First: {formatTime(firstVisit)}</span>
                 <span>Last: {formatTime(lastVisit)}</span>
               </div>
@@ -302,28 +292,28 @@ export default function Today() {
 
             {/* Visit History Section */}
             <div className="px-4 pb-4 flex-1 flex flex-col min-h-0">
-              <h4 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 tracking-wider mb-2 px-0.5">
+              <h4 className="text-xs font-semibold text-white/70 tracking-wider mb-2 px-0.5">
                 Visit History
               </h4>
 
               {logsToUse.length === 0 ? (
-                <div className="text-center py-8 text-xs text-neutral-500 bg-neutral-100 dark:bg-neutral-900/20 rounded-xl border border-neutral-200 dark:border-neutral-800/20">
+                <div className="text-center py-8 text-xs text-white/50 bg-white/5 rounded-xl border border-white/10">
                   No visit history logs found.
                 </div>
               ) : (
-                <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5 max-h-[220px] custom-scrollbar">
+                <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5 max-h-[220px] glass-scrollbar">
                   {logsToUse.map((log) => (
                     <div
                       key={log.id}
-                      className="grid grid-cols-[55px_1fr_auto] items-center gap-2.5 py-2 px-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900/30 hover:bg-neutral-200/60 dark:hover:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800/20 text-xs transition"
+                      className="grid grid-cols-[55px_1fr_auto] items-center gap-2.5 py-2 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs transition"
                     >
-                      <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
+                      <span className="text-[10px] text-white/50 font-medium">
                         {formatTime(log.timestamp)}
                       </span>
-                      <span className="font-semibold text-neutral-700 dark:text-neutral-300 truncate pr-1" title={log.title || selectedDomain}>
+                      <span className="font-semibold text-white/70 truncate pr-1" title={log.title || selectedDomain}>
                         {log.title || selectedDomain}
                       </span>
-                      <span className="font-bold text-neutral-500 dark:text-neutral-400">
+                      <span className="font-bold text-white/50">
                         {formatDuration(log.duration)}
                       </span>
                     </div>
@@ -332,7 +322,8 @@ export default function Today() {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

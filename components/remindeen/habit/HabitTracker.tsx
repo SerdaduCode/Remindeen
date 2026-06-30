@@ -123,7 +123,7 @@ function HabitTracker() {
       )}
 
       {!loading && !error && habits.length > 0 && (
-        <div className="flex flex-col gap-2 overflow-y-auto">
+        <div className="flex flex-col gap-2 overflow-y-auto glass-scrollbar">
           {habits.map((habit) => {
             const checkedToday = isCheckedInToday(habit);
             const streak = streakFor(habit);

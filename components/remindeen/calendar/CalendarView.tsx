@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Repeat } from "lucide-react";
 import { useEvents, type Event } from "@/hooks/use-events";
 import { useTranslation } from "@/hooks/use-translation";
-import { parseEventDate, parseEventTime } from "@/lib/event-datetime";
+import { formatDateKey, formatTime } from "@/lib/event-datetime";
+import { getEventOccurrences } from "@/lib/event-occurrences";
 import EventFormModal, { type EventFormValues } from "./EventFormModal";
 
 type FormState = { mode: "create" } | { mode: "edit"; event: Event } | null;
@@ -38,13 +39,25 @@ function CalendarView() {
   const monthCells = useMemo(() => buildMonthGrid(currentMonth), [currentMonth]);
   const monthLabel = currentMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
-  const datesWithEvents = useMemo(() => new Set(events.map((event) => parseEventDate(event.startAt))), [events]);
+  const monthOccurrences = useMemo(() => {
+    const rangeStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const rangeEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+    return events.flatMap((event) => getEventOccurrences(event, rangeStart, rangeEnd));
+  }, [events, currentMonth]);
+
+  const datesWithEvents = useMemo(
+    () => new Set(monthOccurrences.map((occurrence) => formatDateKey(occurrence.startAt))),
+    [monthOccurrences],
+  );
 
   const selectedDayEvents = useMemo(() => {
     if (!selectedDate) return [];
+    const [year, month, day] = selectedDate.split("-").map(Number);
+    const rangeStart = new Date(year, month - 1, day);
+    const rangeEnd = new Date(year, month - 1, day + 1);
     return events
-      .filter((event) => parseEventDate(event.startAt) === selectedDate)
-      .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
+      .flatMap((event) => getEventOccurrences(event, rangeStart, rangeEnd))
+      .sort((a, b) => a.startAt.getTime() - b.startAt.getTime());
   }, [events, selectedDate]);
 
   const goToPrevMonth = () => setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
@@ -130,13 +143,13 @@ function CalendarView() {
         </button>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
+      <div className="flex flex-1 flex-col gap-2 overflow-y-auto glass-scrollbar">
         {selectedDayEvents.length === 0 && (
           <p className="py-2 text-center text-xs text-white/40">{t("event.empty_state")}</p>
         )}
-        {selectedDayEvents.map((event) => (
+        {selectedDayEvents.map(({ event, startAt, endAt }) => (
           <button
-            key={event.id}
+            key={`${event.id}-${startAt.getTime()}`}
             type="button"
             onClick={() => setFormState({ mode: "edit", event })}
             className="flex cursor-pointer items-start justify-between gap-2 rounded-lg bg-white/[0.06] p-3 text-left ring-1 ring-white/10 transition hover:bg-white/[0.1]"
@@ -153,8 +166,8 @@ function CalendarView() {
             <div className="flex shrink-0 items-center gap-1.5 text-xs text-white/50">
               {event.isRecurring && <Repeat className="h-3 w-3" aria-label={t("event.recurring_aria")} />}
               <span>
-                {parseEventTime(event.startAt)}
-                {event.endAt ? ` - ${parseEventTime(event.endAt)}` : ""}
+                {formatTime(startAt)}
+                {endAt ? ` - ${formatTime(endAt)}` : ""}
               </span>
             </div>
           </button>

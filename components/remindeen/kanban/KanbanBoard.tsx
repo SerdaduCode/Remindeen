@@ -167,7 +167,7 @@ function KanbanBoard() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-1 gap-3 overflow-x-auto">
+          <div className="flex flex-1 gap-3 overflow-x-auto glass-scrollbar">
             {COLUMNS.map((status, index) => (
               <KanbanColumn
                 key={status}

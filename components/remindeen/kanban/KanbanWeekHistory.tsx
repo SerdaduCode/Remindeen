@@ -13,7 +13,7 @@ function KanbanWeekHistory({ weekLabel, tasks, onSelectTask }: KanbanWeekHistory
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
+    <div className="flex flex-1 flex-col gap-3 overflow-y-auto glass-scrollbar">
       <h3 className="text-xs font-semibold tracking-wide text-white/60">{weekLabel}</h3>
 
       {tasks.length === 0 ? (

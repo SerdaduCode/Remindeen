@@ -28,7 +28,7 @@ function KanbanColumn({ status, title, tasks, onEditTask, isFirst = false }: Kan
       </h3>
       <div
         ref={setNodeRef}
-        className={`flex min-h-[80px] flex-1 flex-col gap-2 overflow-y-auto rounded-lg transition-colors ${
+        className={`flex min-h-[80px] flex-1 flex-col gap-2 overflow-y-auto rounded-lg glass-scrollbar transition-colors ${
           isOver ? "bg-white/[0.06] ring-1 ring-inset ring-white/20" : ""
         }`}
       >

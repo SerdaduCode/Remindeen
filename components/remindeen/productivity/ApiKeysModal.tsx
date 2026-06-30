@@ -77,7 +77,7 @@ function ApiKeysModal({ onClose }: ApiKeysModalProps) {
           <div className="space-y-4">
             <p className="text-xs text-amber-300/90">{t("mcp.keys.reveal_warning")}</p>
             <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 p-2">
-              <code className="flex-1 overflow-x-auto whitespace-nowrap text-xs text-white/90">
+              <code className="flex-1 overflow-x-auto whitespace-nowrap text-xs text-white/90 glass-scrollbar">
                 {revealedKey.token}
               </code>
               <Button

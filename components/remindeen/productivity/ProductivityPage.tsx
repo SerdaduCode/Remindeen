@@ -3,6 +3,8 @@ import { useAuth } from "@/hooks/use-auth";
 import KanbanBoard from "../kanban/KanbanBoard";
 import HabitTracker from "../habit/HabitTracker";
 import CalendarView from "../calendar/CalendarView";
+import Today from "../browser-tracking/Today";
+import RecentActivity from "../browser-tracking/RecentActivity";
 import SignInPrompt from "./SignInPrompt";
 import ProductivityMenu from "./ProductivityMenu";
 import ApiKeysModal from "./ApiKeysModal";
@@ -44,7 +46,7 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
           <SignInPrompt signingIn={signingIn} error={error} onSignIn={signIn} />
         </div>
       ) : (
-        <div className="relative z-10 grid h-full gap-4 overflow-y-auto p-4 md:grid-cols-[320px_minmax(0,1fr)] md:overflow-hidden md:p-6">
+        <div className="relative z-10 grid h-full gap-4 overflow-y-auto p-4 md:grid-cols-[320px_minmax(0,1fr)_320px] md:overflow-hidden md:p-6">
           <div className="flex flex-col gap-4 min-h-0">
             <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
               <HabitTracker />
@@ -56,6 +58,14 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
           <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
             <KanbanBoard />
           </section>
+          <div className="flex flex-col gap-4 min-h-0">
+            <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
+              <Today />
+            </section>
+            <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
+              <RecentActivity />
+            </section>
+          </div>
         </div>
       )}
 

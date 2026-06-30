@@ -1,7 +1,8 @@
 import { storage } from '#imports';
 import { supabase } from '@/lib/supabase';
-import { setStoredSession, toAuthSession } from '@/stores/auth';
+import { getStoredSession, setStoredSession, toAuthSession } from '@/stores/auth';
 import { apiFetch } from '@/lib/api';
+import { syncBrowserTracking } from '@/lib/browser-tracking';
 
 const GOOGLE_CALENDAR_URL = import.meta.env.VITE_API_GOOGLE_CALENDAR as string;
 
@@ -72,6 +73,8 @@ const uiSettingsStorage = storage.defineItem<UiSettings>('local:uiSettings', {
 
 const DAILY_RESET_ALARM = 'dailyStatsReset';
 const PRAYER_ALARM_PREFIX = 'prayer-';
+const BROWSER_TRACKING_SYNC_ALARM = 'browserTrackingSync';
+const BROWSER_TRACKING_SYNC_PERIOD_MINUTES = 5;
 
 function getLocalDateString(date: Date): string {
   const year = date.getFullYear();
@@ -101,6 +104,24 @@ async function checkDailyReset() {
   const today = getLocalDateString(new Date());
   if (lastReset !== today) {
     await resetDailyStats();
+  }
+}
+
+// Pushes today's per-domain running totals to the server. No-ops while
+// signed out (nothing to attribute the data to) and swallows failures so a
+// flaky request doesn't break the recurring alarm — the next 5-minute tick
+// retries with the latest snapshot anyway.
+async function syncBrowserTrackingIfSignedIn() {
+  const session = await getStoredSession();
+  if (!session) return;
+
+  const topWebsites = await topWebsitesStorage.getValue();
+  if (topWebsites.length === 0) return;
+
+  try {
+    await syncBrowserTracking(getLocalDateString(new Date()), topWebsites);
+  } catch (error) {
+    console.error('Failed to sync browser tracking stats:', error);
   }
 }
 
@@ -454,6 +475,11 @@ export default defineBackground(() => {
     periodInMinutes: 24 * 60,
   });
 
+  // Schedule a recurring alarm to push today's tracking totals to the server
+  browser.alarms.create(BROWSER_TRACKING_SYNC_ALARM, {
+    periodInMinutes: BROWSER_TRACKING_SYNC_PERIOD_MINUTES,
+  });
+
   // Schedule prayer time notifications based on the last fetched prayer times
   prayerTimesStorage.getValue().then(schedulePrayerAlarms);
 
@@ -465,6 +491,8 @@ export default defineBackground(() => {
   browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === DAILY_RESET_ALARM) {
       resetDailyStats();
+    } else if (alarm.name === BROWSER_TRACKING_SYNC_ALARM) {
+      syncBrowserTrackingIfSignedIn();
     } else if (alarm.name.startsWith(PRAYER_ALARM_PREFIX)) {
       notifyPrayerTime(alarm.name.slice(PRAYER_ALARM_PREFIX.length));
     }

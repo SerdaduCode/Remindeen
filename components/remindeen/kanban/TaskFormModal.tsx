@@ -297,7 +297,7 @@ function TaskComments({ taskId }: { taskId: number }) {
       {comments.length === 0 ? (
         <p className="text-xs text-white/40">{t("kanban.form.comments_empty")}</p>
       ) : (
-        <div className="max-h-72 flex-1 space-y-2 overflow-y-auto pr-1 md:max-h-[340px]">
+        <div className="max-h-72 flex-1 space-y-2 overflow-y-auto pr-1 md:max-h-[340px] glass-scrollbar">
           {comments.map((comment) => (
             <div key={comment.id} className="rounded-lg bg-white/5 p-2 text-xs text-white/80">
               {confirmDeleteCommentId === comment.id ? (
