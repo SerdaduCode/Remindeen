@@ -53,12 +53,23 @@
 
 ## 7. Verification
 
-- [ ] 7.1 Open Productivity page → confirm HabitTracker and CalendarView both visible in left column, KanbanBoard in right
-- [ ] 7.2 Navigate months in CalendarView → confirm grid updates correctly
-- [ ] 7.3 Click a date → confirm event list for that day appears
-- [ ] 7.4 Create an event with title + date + time → confirm appears in event list and dot on calendar
-- [ ] 7.5 Create a weekly recurring event (e.g. every Friday) → confirm `rrule` is correct in the API response
-- [ ] 7.6 Edit an event → confirm PATCH fires and event list updates
-- [ ] 7.7 Delete an event → confirm inline confirmation appears, then event is removed
-- [ ] 7.8 Create an event via MCP API → confirm it appears in the UI without refresh (Pusher)
-- [ ] 7.9 Verify layout on narrow viewport: all panels stack vertically
+- [x] 7.1 Open Productivity page → confirm HabitTracker and CalendarView both visible in left column, KanbanBoard in right
+- [x] 7.2 Navigate months in CalendarView → confirm grid updates correctly
+- [x] 7.3 Click a date → confirm event list for that day appears
+- [x] 7.4 Create an event with title + date + time → confirm appears in event list and dot on calendar
+- [x] 7.5 Create a weekly recurring event (e.g. every Friday) → confirm `rrule` is correct in the API response
+- [x] 7.6 Edit an event → confirm PATCH fires and event list updates
+- [x] 7.7 Delete an event → confirm inline confirmation appears, then event is removed
+- [x] 7.8 Create an event via MCP API → confirm it appears in the UI without refresh (Pusher), **and confirm the displayed date/time matches what was actually requested**, not just that some event appears (see section 8 — this previously passed on presence alone and missed the timezone-display bug)
+- [x] 7.9 Verify layout on narrow viewport: all panels stack vertically
+
+## 8. Timezone-Aware Event Display Fix
+
+Supersedes the string-slicing approach from tasks 2.2/2.3 — see design.md's "Event display must parse `startAt`/`endAt` as real `Date` instants" decision for full context.
+
+- [x] 8.1 Rewrite `parseEventDate`/`parseEventTime` in `lib/event-datetime.ts` to construct a `Date` from the ISO string and format using local-timezone-aware methods, replacing the `slice(0, 10)`/`slice(11, 16)` implementation
+- [x] 8.2 In `CalendarView.tsx`, replace `events.map((event) => event.startAt.slice(0, 10))` (`datesWithEvents`) with a real-`Date`-derived local date key
+- [x] 8.3 In `CalendarView.tsx`, replace `events.filter((event) => event.startAt.startsWith(selectedDate))` (`selectedDayEvents`) with a comparison against the same local date key
+- [x] 8.4 In `CalendarView.tsx`, replace the sort comparator `a.startAt.localeCompare(b.startAt)` with `new Date(a.startAt).getTime() - new Date(b.startAt).getTime()`
+- [x] 8.5 Manually verify `EventFormModal`'s edit-mode pre-fill now shows the correct local date/time for an event created via the MCP API with a UTC-normalized `startAt` (should be covered automatically by 8.1, since the modal reuses `parseEventDate`/`parseEventTime`, but confirm directly since it's the surface with the highest cost if still wrong — see design.md's edit-resave corruption risk)
+- [x] 8.6 Manually verify an event whose `startAt` instant falls on a different UTC date than the viewer's local date (e.g. 23:30 local) shows its calendar dot and day-list grouping on the correct local date

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Repeat } from "lucide-react";
 import { useEvents, type Event } from "@/hooks/use-events";
 import { useTranslation } from "@/hooks/use-translation";
-import { parseEventTime } from "@/lib/event-datetime";
+import { parseEventDate, parseEventTime } from "@/lib/event-datetime";
 import EventFormModal, { type EventFormValues } from "./EventFormModal";
 
 type FormState = { mode: "create" } | { mode: "edit"; event: Event } | null;
@@ -38,11 +38,13 @@ function CalendarView() {
   const monthCells = useMemo(() => buildMonthGrid(currentMonth), [currentMonth]);
   const monthLabel = currentMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
-  const datesWithEvents = useMemo(() => new Set(events.map((event) => event.startAt.slice(0, 10))), [events]);
+  const datesWithEvents = useMemo(() => new Set(events.map((event) => parseEventDate(event.startAt))), [events]);
 
   const selectedDayEvents = useMemo(() => {
     if (!selectedDate) return [];
-    return events.filter((event) => event.startAt.startsWith(selectedDate)).sort((a, b) => a.startAt.localeCompare(b.startAt));
+    return events
+      .filter((event) => parseEventDate(event.startAt) === selectedDate)
+      .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
   }, [events, selectedDate]);
 
   const goToPrevMonth = () => setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));

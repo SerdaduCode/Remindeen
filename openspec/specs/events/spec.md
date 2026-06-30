@@ -1,6 +1,7 @@
-# events Specification
+# events
 
 ## Purpose
+
 UI for creating, viewing, editing, and deleting calendar events from the CalendarView panel on the Productivity page.
 
 ## Requirements
@@ -21,7 +22,7 @@ Clicking a day in the mini calendar SHALL select that day and display a list of 
 
 #### Scenario: Selecting a day shows its events
 - **WHEN** the user clicks on July 4 in the mini calendar and has two events on that day
-- **THEN** the event list below the calendar shows those two events sorted by start time
+- **THEN** the event list below the calendar shows those two events sorted by actual start time (the underlying instant each `startAt` represents), not by lexicographic comparison of the raw `startAt` strings
 
 #### Scenario: Selecting a day with no events shows an empty state
 - **WHEN** the user clicks on a day with no events
@@ -73,3 +74,18 @@ The CalendarView event list SHALL reflect `event.created`, `event.updated`, and 
 #### Scenario: An event created elsewhere appears in the list
 - **WHEN** an event is created for the selected day via another device or the MCP API
 - **THEN** the event appears in the day's event list without the user refreshing
+
+### Requirement: Event date and time display is correct regardless of which client created the event
+The displayed date and time for an event SHALL reflect the actual instant encoded in `startAt`/`endAt`, converted to the viewer's local timezone. This SHALL hold regardless of which valid ISO 8601 offset the creating client used to encode that instant — display SHALL NOT assume the stored string's literal digits are already the viewer's local wall-clock time.
+
+#### Scenario: An event created via remindeen's own form displays the entered time
+- **WHEN** a user creates an event for 09:00 using EventFormModal's date/time inputs
+- **THEN** the event displays as 09:00 in the calendar and event list
+
+#### Scenario: An event created via the MCP API with a different offset displays the correct local time
+- **WHEN** an event is created via the MCP `create_event` tool with `startAt` expressed in UTC (e.g. `"2026-07-01T12:00:00Z"` for a user whose local time is `+07:00`, representing 19:00 local)
+- **THEN** the event displays as 19:00 in the calendar and event list, not 12:00
+
+#### Scenario: A day's calendar dot and event grouping reflect the viewer's local date
+- **WHEN** an event's `startAt` instant falls on a different calendar date in UTC than in the viewer's local timezone (e.g. an event at 23:30 local that is the next day in UTC)
+- **THEN** the event's dot indicator and day grouping appear on the viewer's local date, not the UTC date

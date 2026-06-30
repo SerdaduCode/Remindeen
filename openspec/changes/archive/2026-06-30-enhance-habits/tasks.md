@@ -45,8 +45,8 @@
 
 ## 8. Verification
 
-- [ ] 8.1 Create a weekly habit, select Mon + Wed + Fri → confirm `weekDays: [1, 3, 5]` returned by API; habit row shows "Mon · Wed · Fri"
-- [ ] 8.2 Create a daily habit with reminder time `05:30` → confirm `reminderTime: "05:30"` returned; habit row shows "05:30"
-- [ ] 8.3 Switch frequency from weekly to daily in the form → day picker disappears, time input appears, previously selected days are cleared
-- [ ] 8.4 Open edit modal for a habit with `weekDays` and `reminderTime` → confirm both pre-populate correctly
-- [ ] 8.5 Sync toggle is disabled without a connected calendar; enabled with one connected
+- [x] 8.1 Create a weekly habit, select Mon + Wed + Fri → confirm `weekDays: [1, 3, 5]` returned by API; habit row shows "Mon · Wed · Fri"
+- [x] 8.2 Create a daily habit with reminder time `05:30` → confirm `reminderTime: "05:30"` returned; habit row shows "05:30"
+- [x] 8.3 Switch frequency from weekly to daily in the form → day picker disappears, time input appears, previously selected days are cleared
+- [x] 8.4 Open edit modal for a habit with `weekDays` and `reminderTime` → confirm both pre-populate correctly
+- [x] 8.5 Sync toggle is disabled without a connected calendar; enabled with one connected
