@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import KanbanBoard from "../kanban/KanbanBoard";
 import HabitTracker from "../habit/HabitTracker";
+import CalendarView from "../calendar/CalendarView";
 import SignInPrompt from "./SignInPrompt";
 import ProductivityMenu from "./ProductivityMenu";
 import ApiKeysModal from "./ApiKeysModal";
@@ -44,9 +45,14 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
         </div>
       ) : (
         <div className="relative z-10 grid h-full gap-4 overflow-y-auto p-4 md:grid-cols-[320px_minmax(0,1fr)] md:overflow-hidden md:p-6">
-          <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
-            <HabitTracker />
-          </section>
+          <div className="flex flex-col gap-4 min-h-0">
+            <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
+              <HabitTracker />
+            </section>
+            <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
+              <CalendarView />
+            </section>
+          </div>
           <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
             <KanbanBoard />
           </section>

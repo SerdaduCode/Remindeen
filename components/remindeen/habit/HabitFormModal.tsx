@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import ConfirmDeletePanel from "@/components/ui/confirm-delete-panel";
 import {
   Select,
@@ -14,6 +16,17 @@ import {
 import type { Habit, HabitFrequency, HabitInput } from "@/hooks/use-habits";
 import type { TaskPriority } from "@/hooks/use-tasks";
 import { useTranslation } from "@/hooks/use-translation";
+import { useCalendarConnection } from "@/hooks/use-calendar-connection";
+
+const WEEK_DAYS: { value: number; label: string }[] = [
+  { value: 0, label: "Su" },
+  { value: 1, label: "Mo" },
+  { value: 2, label: "Tu" },
+  { value: 3, label: "We" },
+  { value: 4, label: "Th" },
+  { value: 5, label: "Fr" },
+  { value: 6, label: "Sa" },
+];
 
 export interface HabitFormValues extends HabitInput {}
 
@@ -26,15 +39,29 @@ interface HabitFormModalProps {
 
 function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModalProps) {
   const { t } = useTranslation();
+  const { status: calendarStatus } = useCalendarConnection();
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [frequency, setFrequency] = useState<HabitFrequency>(initial?.frequency ?? "daily");
   const [priority, setPriority] = useState<TaskPriority | "none">(initial?.priority ?? "none");
+  const [weekDays, setWeekDays] = useState<number[]>(initial?.weekDays ?? []);
+  const [reminderTime, setReminderTime] = useState(initial?.reminderTime ?? "");
+  const [syncToCalendar, setSyncToCalendar] = useState(initial?.syncToCalendar ?? false);
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const isEdit = initial !== null;
+
+  const handleFrequencyChange = (value: HabitFrequency) => {
+    setFrequency(value);
+    if (value === "daily") setWeekDays([]);
+    if (value === "weekly") setReminderTime("");
+  };
+
+  const toggleWeekDay = (day: number) => {
+    setWeekDays((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]));
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,6 +76,9 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
         description: description.trim() || undefined,
         frequency,
         priority: priority === "none" ? null : priority,
+        weekDays: frequency === "weekly" ? weekDays : [],
+        reminderTime: frequency === "daily" && reminderTime ? reminderTime : null,
+        syncToCalendar,
       });
     } finally {
       setSubmitting(false);
@@ -117,7 +147,7 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
 
           <div className="space-y-1.5">
             <Label className="text-white/70">{t("habit.form.frequency_label")}</Label>
-            <Select value={frequency} onValueChange={(value) => setFrequency(value as HabitFrequency)}>
+            <Select value={frequency} onValueChange={(value) => handleFrequencyChange(value as HabitFrequency)}>
               <SelectTrigger className="w-full border-white/15 bg-white/5 text-white">
                 <SelectValue />
               </SelectTrigger>
@@ -126,6 +156,64 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
                 <SelectItem value="weekly">{t("habit.frequency_weekly")}</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {frequency === "weekly" && (
+            <div className="flex flex-wrap gap-2">
+              {WEEK_DAYS.map((day) => (
+                <label
+                  key={day.value}
+                  className="flex cursor-pointer items-center gap-1.5 text-xs text-white/70"
+                >
+                  <Checkbox
+                    checked={weekDays.includes(day.value)}
+                    onCheckedChange={() => toggleWeekDay(day.value)}
+                  />
+                  {day.label}
+                </label>
+              ))}
+            </div>
+          )}
+
+          {frequency === "daily" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="habit-reminder-time" className="text-white/70">
+                {t("habit.form.reminder_time_label")}
+              </Label>
+              <Input
+                id="habit-reminder-time"
+                type="time"
+                value={reminderTime}
+                onChange={(event) => setReminderTime(event.target.value)}
+                className="border-white/15 bg-white/5 text-white"
+              />
+            </div>
+          )}
+
+          <div
+            onClick={() => {
+              if (calendarStatus.connected) setSyncToCalendar((value) => !value);
+            }}
+            className={`flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 p-3 ${
+              calendarStatus.connected ? "cursor-pointer hover:bg-white/[0.08]" : ""
+            }`}
+          >
+            <div className="space-y-0.5">
+              <Label className="text-white/80">{t("habit.form.sync_to_calendar_label")}</Label>
+              {!calendarStatus.connected && (
+                <p className="text-[11px] text-white/40">{t("habit.form.sync_calendar_hint")}</p>
+              )}
+            </div>
+            <div onClick={(event) => event.stopPropagation()}>
+              <Switch
+                id="habit-sync-calendar"
+                checked={syncToCalendar}
+                disabled={!calendarStatus.connected}
+                onCheckedChange={setSyncToCalendar}
+                className="border-white/20 data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20 dark:data-[state=unchecked]:bg-white/20"
+                thumbClassName="bg-white dark:bg-white data-[state=checked]:bg-zinc-900 dark:data-[state=checked]:bg-zinc-900 dark:data-[state=unchecked]:bg-white"
+              />
+            </div>
           </div>
 
           <div className="space-y-1.5">

@@ -14,6 +14,18 @@ const FREQUENCY_KEY: Record<Habit["frequency"], string> = {
   weekly: "habit.frequency_weekly",
 };
 
+const WEEK_DAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function scheduleMetadata(habit: Habit): string | null {
+  if (habit.weekDays.length > 0) {
+    return habit.weekDays.map((day) => WEEK_DAY_ABBR[day]).join(" · ");
+  }
+  if (habit.frequency === "daily" && habit.reminderTime) {
+    return habit.reminderTime;
+  }
+  return null;
+}
+
 function HabitTracker() {
   const {
     habits,
@@ -66,6 +78,7 @@ function HabitTracker() {
           {habits.map((habit) => {
             const checkedIn = isCheckedInToday(habit);
             const streak = streakFor(habit);
+            const metadata = scheduleMetadata(habit);
             return (
               <div
                 key={habit.id}
@@ -77,6 +90,7 @@ function HabitTracker() {
                   className="flex-1 cursor-pointer text-left"
                 >
                   <p className="text-sm font-medium text-white/90">{habit.title}</p>
+                  {metadata && <p className="text-xs text-white/40">{metadata}</p>}
                   <div className="mt-1 flex items-center gap-2">
                     <Badge variant="secondary" className="text-[10px]">
                       {t(FREQUENCY_KEY[habit.frequency])}

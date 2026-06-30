@@ -16,6 +16,9 @@ export interface Habit {
   description: string | null
   priority: TaskPriority | null
   frequency: HabitFrequency
+  weekDays: number[]
+  reminderTime: string | null
+  syncToCalendar: boolean
   createdAt: string
   updatedAt: string
 }
@@ -33,6 +36,9 @@ export interface HabitInput {
   description?: string
   priority?: TaskPriority | null
   frequency: HabitFrequency
+  weekDays?: number[]
+  reminderTime?: string | null
+  syncToCalendar?: boolean
 }
 
 export function useHabits(enabled: boolean) {

@@ -504,6 +504,18 @@ export default defineAppConfig({
       en: 'High',
       id: 'Tinggi',
     },
+    'habit.form.reminder_time_label': {
+      en: 'Reminder time',
+      id: 'Waktu pengingat',
+    },
+    'habit.form.sync_to_calendar_label': {
+      en: 'Sync to Calendar',
+      id: 'Sinkron ke Kalender',
+    },
+    'habit.form.sync_calendar_hint': {
+      en: 'Connect Google Calendar in settings to enable this.',
+      id: 'Hubungkan Google Calendar di pengaturan untuk mengaktifkan ini.',
+    },
     'habit.form.create_title': {
       en: 'New habit',
       id: 'Kebiasaan baru',
@@ -527,6 +539,114 @@ export default defineAppConfig({
     'habit.form.delete_confirm': {
       en: 'Delete this habit? This cannot be undone.',
       id: 'Hapus kebiasaan ini? Tindakan ini tidak dapat dibatalkan.',
+    },
+    'calendar.prev_month_aria': {
+      en: 'Previous month',
+      id: 'Bulan sebelumnya',
+    },
+    'calendar.next_month_aria': {
+      en: 'Next month',
+      id: 'Bulan berikutnya',
+    },
+    'event.add_event': {
+      en: '+ Add Event',
+      id: '+ Tambah Acara',
+    },
+    'event.empty_state': {
+      en: 'No events on this day.',
+      id: 'Tidak ada acara pada hari ini.',
+    },
+    'event.error_loading': {
+      en: 'Failed to load events.',
+      id: 'Gagal memuat acara.',
+    },
+    'event.recurring_aria': {
+      en: 'Recurring event',
+      id: 'Acara berulang',
+    },
+    'event.form.title_label': {
+      en: 'Title',
+      id: 'Judul',
+    },
+    'event.form.title_placeholder': {
+      en: "What's the event?",
+      id: 'Acara apa ini?',
+    },
+    'event.form.title_required': {
+      en: 'Title is required',
+      id: 'Judul wajib diisi',
+    },
+    'event.form.date_label': {
+      en: 'Date',
+      id: 'Tanggal',
+    },
+    'event.form.start_time_label': {
+      en: 'Start time',
+      id: 'Waktu mulai',
+    },
+    'event.form.end_time_label': {
+      en: 'End time (optional)',
+      id: 'Waktu selesai (opsional)',
+    },
+    'event.form.location_label': {
+      en: 'Location (optional)',
+      id: 'Lokasi (opsional)',
+    },
+    'event.form.location_placeholder': {
+      en: 'Add a location...',
+      id: 'Tambahkan lokasi...',
+    },
+    'event.form.recurrence_label': {
+      en: 'Recurrence',
+      id: 'Pengulangan',
+    },
+    'event.form.recurrence_none': {
+      en: 'None',
+      id: 'Tidak ada',
+    },
+    'event.form.recurrence_daily': {
+      en: 'Daily',
+      id: 'Harian',
+    },
+    'event.form.recurrence_weekly': {
+      en: 'Weekly',
+      id: 'Mingguan',
+    },
+    'event.form.recurrence_monthly': {
+      en: 'Monthly',
+      id: 'Bulanan',
+    },
+    'event.form.sync_to_calendar_label': {
+      en: 'Sync to Calendar',
+      id: 'Sinkron ke Kalender',
+    },
+    'event.form.sync_calendar_hint': {
+      en: 'Connect Google Calendar in settings to enable this.',
+      id: 'Hubungkan Google Calendar di pengaturan untuk mengaktifkan ini.',
+    },
+    'event.form.create_title': {
+      en: 'New event',
+      id: 'Acara baru',
+    },
+    'event.form.edit_title': {
+      en: 'Edit event',
+      id: 'Ubah acara',
+    },
+    'event.form.save': {
+      en: 'Save',
+      id: 'Simpan',
+    },
+    'event.form.cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'event.form.delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
+    'event.form.delete_confirm': {
+      en: 'Delete this event? This cannot be undone.',
+      id: 'Hapus acara ini? Tindakan ini tidak dapat dibatalkan.',
     },
     'mcp.keys.menu_aria': {
       en: 'Open menu',
