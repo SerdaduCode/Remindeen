@@ -2,6 +2,7 @@ import { storage } from '#imports';
 import { useEffect, useState } from 'react';
 import { Globe, RefreshCw, X } from 'lucide-react';
 import { useTranslation } from '@/hooks/use-translation';
+import ConfirmDeletePanel from '@/components/ui/confirm-delete-panel';
 
 interface TopWebsite {
   domain: string;
@@ -69,6 +70,7 @@ export default function Today() {
   const [recentActivity, setRecentActivity] = useState<ActivityLog[]>([]);
   const [showAllTop, setShowAllTop] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,13 +108,12 @@ export default function Today() {
   }, [selectedDomain]);
 
   const resetStats = async () => {
-    if (confirm('Are you sure you want to reset your activity logs?')) {
-      await Promise.all([
-        topWebsitesStorage.setValue([]),
-        recentActivityStorage.setValue([]),
-        storage.setItem('local:currentSession', null)
-      ]);
-    }
+    await Promise.all([
+      topWebsitesStorage.setValue([]),
+      recentActivityStorage.setValue([]),
+      storage.setItem('local:currentSession', null)
+    ]);
+    setShowResetConfirm(false);
   };
 
   const displayedTopWebsites = showAllTop ? topWebsites : topWebsites.slice(0, LIMIT_TODAY_WEBSITES);
@@ -180,7 +181,7 @@ export default function Today() {
         </div>
         {topWebsites.length > 0 && (
           <button
-            onClick={resetStats}
+            onClick={() => setShowResetConfirm(true)}
             title="Reset Stats"
             className="text-neutral-400 hover:text-red-400 transition cursor-pointer"
           >
@@ -189,7 +190,18 @@ export default function Today() {
         )}
       </div>
 
-      {topWebsites.length === 0 ? (
+      {showResetConfirm ? (
+        <ConfirmDeletePanel
+          message="Reset your activity logs?"
+          detail="This cannot be undone."
+          confirmLabel="Reset"
+          messageClassName="text-sm font-medium text-neutral-800 dark:text-neutral-200"
+          detailClassName="text-xs text-neutral-500 dark:text-neutral-400"
+          cancelClassName="cursor-pointer text-neutral-500 dark:text-neutral-400 active:scale-[0.98] hover:bg-neutral-200/60 dark:hover:bg-white/5 hover:text-neutral-800 dark:hover:text-neutral-200"
+          onConfirm={resetStats}
+          onCancel={() => setShowResetConfirm(false)}
+        />
+      ) : topWebsites.length === 0 ? (
         <div className="text-center py-6 text-xs text-neutral-400">
           No activity tracked yet today.
         </div>
@@ -226,7 +238,7 @@ export default function Today() {
         </div>
       )}
 
-      {topWebsites.length > LIMIT_TODAY_WEBSITES && (
+      {!showResetConfirm && topWebsites.length > LIMIT_TODAY_WEBSITES && (
         <button
           onClick={() => setShowAllTop(!showAllTop)}
           className="w-full text-center text-[11px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition py-2 mt-2 border-t border-neutral-200/10 dark:border-neutral-800/40 cursor-pointer"

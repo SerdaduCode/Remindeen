@@ -25,11 +25,19 @@ Users SHALL be able to edit an existing habit's title, description, priority, an
 - **THEN** the habit is updated via `PATCH /habits/:id` and the habit list reflects the new frequency
 
 ### Requirement: Delete habit
-Users SHALL be able to permanently delete a habit. Deletion SHALL remove the habit and its check-in history via `DELETE /habits/:id`.
+Users SHALL be able to permanently delete a habit. Deletion SHALL remove the habit and its check-in history via `DELETE /habits/:id`. Before deletion is executed, the habit form modal SHALL display an inline confirmation panel in place of the form content, requiring the user to confirm or cancel. The native browser `confirm()` dialog SHALL NOT be used.
 
-#### Scenario: Deleting a habit removes it from the tracker
-- **WHEN** the user deletes a habit and confirms
+#### Scenario: Deleting a habit shows an inline confirmation
+- **WHEN** the user clicks the Delete button on an existing habit's edit modal
+- **THEN** the modal replaces the form content with a confirmation panel asking the user to confirm the deletion
+
+#### Scenario: Confirming deletion removes the habit
+- **WHEN** the user confirms deletion in the inline confirmation panel
 - **THEN** the habit is removed via `DELETE /habits/:id` and no longer appears in the habit list
+
+#### Scenario: Cancelling deletion returns to the form
+- **WHEN** the user cancels in the inline confirmation panel
+- **THEN** the modal returns to showing the habit form with no change made to the habit
 
 ### Requirement: Check in for the current period
 Users SHALL be able to mark a habit as completed for its current period (today for daily habits, the current ISO week for weekly habits) via `POST /habits/:id/checkins`. Checking in more than once for the same period SHALL NOT create a duplicate entry.

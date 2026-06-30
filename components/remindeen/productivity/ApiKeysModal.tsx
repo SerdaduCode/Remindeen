@@ -4,6 +4,7 @@ import { Check, Copy, KeyRound, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ConfirmDeletePanel from "@/components/ui/confirm-delete-panel";
 import { useTranslation } from "@/hooks/use-translation";
 import { useApiKeys, type GeneratedApiKey } from "@/hooks/use-api-keys";
 
@@ -18,6 +19,7 @@ function ApiKeysModal({ onClose }: ApiKeysModalProps) {
   const [generating, setGenerating] = useState(false);
   const [revealedKey, setRevealedKey] = useState<GeneratedApiKey | null>(null);
   const [copied, setCopied] = useState(false);
+  const [confirmRevokeKey, setConfirmRevokeKey] = useState<{ id: number; label: string } | null>(null);
 
   const handleGenerate = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -38,11 +40,9 @@ function ApiKeysModal({ onClose }: ApiKeysModalProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleRevoke = async (id: number, keyLabel: string | null) => {
+  const handleRevoke = (id: number, keyLabel: string | null) => {
     const name = keyLabel || t("mcp.keys.unlabeled");
-    if (window.confirm(t("mcp.keys.revoke_confirm").replace("{label}", name))) {
-      await revokeKey(id);
-    }
+    setConfirmRevokeKey({ id, label: name });
   };
 
   const handleDoneRevealing = () => {
@@ -64,7 +64,16 @@ function ApiKeysModal({ onClose }: ApiKeysModalProps) {
           {t("mcp.keys.title")}
         </h2>
 
-        {revealedKey ? (
+        {confirmRevokeKey ? (
+          <ConfirmDeletePanel
+            message={t("mcp.keys.revoke_confirm").replace("{label}", confirmRevokeKey.label)}
+            onConfirm={async () => {
+              await revokeKey(confirmRevokeKey.id);
+              setConfirmRevokeKey(null);
+            }}
+            onCancel={() => setConfirmRevokeKey(null)}
+          />
+        ) : revealedKey ? (
           <div className="space-y-4">
             <p className="text-xs text-amber-300/90">{t("mcp.keys.reveal_warning")}</p>
             <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 p-2">

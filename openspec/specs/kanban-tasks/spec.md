@@ -59,11 +59,19 @@ The task modal SHALL include a "Sync to Calendar" toggle reflecting and controll
 - **THEN** the "Sync to Calendar" toggle defaults to off
 
 ### Requirement: Delete Kanban task
-Users SHALL be able to permanently delete a task. Deletion SHALL remove the task from Al-Quotes via `DELETE /tasks/:id` and from the board view.
+Users SHALL be able to permanently delete a task. Deletion SHALL remove the task from Al-Quotes via `DELETE /tasks/:id` and from the board view. Before deletion is executed, the task modal SHALL display an inline confirmation panel in place of the form content, requiring the user to confirm or cancel.
 
-#### Scenario: Deleting a task removes its card
-- **WHEN** the user deletes a task and confirms
+#### Scenario: Deleting a task shows an inline confirmation
+- **WHEN** the user clicks the Delete button on an existing task's edit modal
+- **THEN** the modal replaces the form content with a confirmation panel asking the user to confirm the deletion
+
+#### Scenario: Confirming deletion removes the task
+- **WHEN** the user confirms deletion in the inline confirmation panel
 - **THEN** the task is removed via `DELETE /tasks/:id` and its card no longer renders on the board
+
+#### Scenario: Cancelling deletion returns to the form
+- **WHEN** the user cancels in the inline confirmation panel
+- **THEN** the modal returns to showing the task form with no change made to the task
 
 ### Requirement: Three-column status workflow
 The Kanban board SHALL render three columns — `To Do`, `Doing`, `Done` — corresponding to the API's `TODO`/`DOING`/`DONE` status values. Moving a task to a different column SHALL update its status via `PATCH /tasks/:id`.
@@ -113,7 +121,7 @@ The Kanban board SHALL reflect Task changes received over the realtime channel �
 - **THEN** the corresponding realtime event for that same task does not result in a duplicate card
 
 ### Requirement: Comment thread on an existing task
-Users SHALL be able to view, add, edit, and delete comments on a task from its edit modal. The comment section SHALL only be shown when editing an existing task (not while creating a new one), since a task must have an id before its comment thread is addressable. Adding a comment SHALL be independent of the modal's main Save action — submitting a comment SHALL call `POST /tasks/:id/comments` immediately, rather than being deferred until the task's other fields are saved.
+Users SHALL be able to view, add, edit, and delete comments on a task from its edit modal. The comment section SHALL only be shown when editing an existing task (not while creating a new one), since a task must have an id before its comment thread is addressable. Adding a comment SHALL be independent of the modal's main Save action — submitting a comment SHALL call `POST /tasks/:id/comments` immediately, rather than being deferred until the task's other fields are saved. Before a comment is deleted, the modal SHALL display an inline confirmation on the comment row.
 
 #### Scenario: Opening an existing task's edit modal loads its comments
 - **WHEN** the user opens the edit modal for an existing task
@@ -131,9 +139,13 @@ Users SHALL be able to view, add, edit, and delete comments on a task from its e
 - **WHEN** the user edits the body of an existing comment on the open task and saves
 - **THEN** the comment is updated via `PATCH /tasks/:id/comments/:commentId` and the thread reflects the new body
 
-#### Scenario: Deleting a comment
-- **WHEN** the user deletes a comment on the open task
-- **THEN** the comment is removed via `DELETE /tasks/:id/comments/:commentId` and no longer renders in the thread
+#### Scenario: Deleting a comment shows inline confirmation
+- **WHEN** the user clicks the delete action on a comment
+- **THEN** the comment row shows an inline confirmation before calling `DELETE /tasks/:id/comments/:commentId`
+
+#### Scenario: Confirming comment deletion removes it from the thread
+- **WHEN** the user confirms deletion of a comment
+- **THEN** the comment is removed via `DELETE /tasks/:id/comments/:commentId` and no longer appears in the thread
 
 ### Requirement: Comment thread reflects realtime updates for the open task
 While a task's edit modal is open, its comment thread SHALL reflect `comment.created`, `comment.updated`, and `comment.deleted` events received over the realtime channel for that task, applying each idempotently by comment id, and SHALL ignore comment events whose `taskId` does not match the currently open task.

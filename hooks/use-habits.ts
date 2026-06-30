@@ -172,8 +172,10 @@ export function useHabits(enabled: boolean) {
   }
 
   const checkIn = async (habit: Habit) => {
+    const today = new Date().toLocaleDateString('en-CA')
     const checkInRecord = await apiFetch<HabitCheckIn>(`${HABITS_URL}/${habit.id}/checkins`, {
       method: 'POST',
+      body: JSON.stringify({ date: today }),
     })
     setCheckInsByHabit((prev) => {
       const existing = prev[habit.id] ?? []

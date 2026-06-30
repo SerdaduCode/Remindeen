@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import ConfirmDeletePanel from "@/components/ui/confirm-delete-panel";
 import {
   Select,
   SelectContent,
@@ -42,6 +43,7 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
   const [syncToCalendar, setSyncToCalendar] = useState(initial?.syncToCalendar ?? false);
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const isEdit = initial !== null;
 
@@ -67,11 +69,9 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!onDelete) return;
-    if (window.confirm(t("kanban.form.delete_confirm"))) {
-      await onDelete();
-    }
+    setShowDeleteConfirm(true);
   };
 
   return createPortal(
@@ -88,6 +88,15 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
         </h2>
 
         <div className={`grid gap-5 ${isEdit ? "md:grid-cols-[1fr_280px]" : ""}`}>
+          {showDeleteConfirm ? (
+            <ConfirmDeletePanel
+              message={t("kanban.form.delete_confirm")}
+              onConfirm={async () => {
+                if (onDelete) await onDelete();
+              }}
+              onCancel={() => setShowDeleteConfirm(false)}
+            />
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="task-title" className="text-white/70">
@@ -230,6 +239,7 @@ function TaskFormModal({ initial, onClose, onSubmit, onDelete }: TaskFormModalPr
               </div>
             </div>
           </form>
+          )}
 
           {isEdit && initial && (
             <div className="flex flex-col border-t border-white/10 pt-4 md:border-t-0 md:border-l md:pl-5 md:pt-0">
@@ -250,6 +260,7 @@ function TaskComments({ taskId }: { taskId: number }) {
   const [sending, setSending] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingBody, setEditingBody] = useState("");
+  const [confirmDeleteCommentId, setConfirmDeleteCommentId] = useState<number | null>(null);
 
   const handleSend = async () => {
     const body = newBody.trim();
@@ -275,10 +286,8 @@ function TaskComments({ taskId }: { taskId: number }) {
     setEditingId(null);
   };
 
-  const handleDeleteComment = async (id: number) => {
-    if (window.confirm(t("kanban.form.comments_delete_confirm"))) {
-      await deleteComment(id);
-    }
+  const handleDeleteComment = (id: number) => {
+    setConfirmDeleteCommentId(id);
   };
 
   return (
@@ -291,7 +300,16 @@ function TaskComments({ taskId }: { taskId: number }) {
         <div className="max-h-72 flex-1 space-y-2 overflow-y-auto pr-1 md:max-h-[340px]">
           {comments.map((comment) => (
             <div key={comment.id} className="rounded-lg bg-white/5 p-2 text-xs text-white/80">
-              {editingId === comment.id ? (
+              {confirmDeleteCommentId === comment.id ? (
+                <ConfirmDeletePanel
+                  message={t("kanban.form.comments_delete_confirm")}
+                  onConfirm={async () => {
+                    await deleteComment(comment.id);
+                    setConfirmDeleteCommentId(null);
+                  }}
+                  onCancel={() => setConfirmDeleteCommentId(null)}
+                />
+              ) : editingId === comment.id ? (
                 <div className="space-y-1.5">
                   <Textarea
                     value={editingBody}

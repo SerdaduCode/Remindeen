@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ConfirmDeletePanel from "@/components/ui/confirm-delete-panel";
 import {
   Select,
   SelectContent,
@@ -31,6 +32,7 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
   const [priority, setPriority] = useState<TaskPriority | "none">(initial?.priority ?? "none");
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const isEdit = initial !== null;
 
@@ -53,11 +55,9 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!onDelete) return;
-    if (window.confirm(t("habit.form.delete_confirm"))) {
-      await onDelete();
-    }
+    setShowDeleteConfirm(true);
   };
 
   return createPortal(
@@ -73,7 +73,16 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
           {isEdit ? t("habit.form.edit_title") : t("habit.form.create_title")}
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {showDeleteConfirm ? (
+          <ConfirmDeletePanel
+            message={t("habit.form.delete_confirm")}
+            onConfirm={async () => {
+              if (onDelete) await onDelete();
+            }}
+            onCancel={() => setShowDeleteConfirm(false)}
+          />
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="habit-title" className="text-white/70">
               {t("habit.form.title_label")}
@@ -160,6 +169,7 @@ function HabitFormModal({ initial, onClose, onSubmit, onDelete }: HabitFormModal
             </div>
           </div>
         </form>
+        )}
       </div>
     </div>,
     document.body,

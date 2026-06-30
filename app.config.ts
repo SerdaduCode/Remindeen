@@ -24,6 +24,14 @@ export default defineAppConfig({
     ],
   },
   translation: {
+    'common.cancel': {
+      en: 'Cancel',
+      id: 'Batal',
+    },
+    'common.delete': {
+      en: 'Delete',
+      id: 'Hapus',
+    },
     'header.description': {
       en: 'Prayer reminders and daily inspiration while you browse',
       id: 'Pengingat sholat dan inspirasi harian saat kamu browsing',
