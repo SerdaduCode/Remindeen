@@ -6,7 +6,3 @@ Switching the active page SHALL animate with a horizontal slide transition rathe
 #### Scenario: Slide transition on page change
 - **WHEN** the active page changes from Page 1 to Page 2
 - **THEN** the container visually slides horizontally to reveal Page 2 instead of switching instantly
-
-#### Scenario: Drag overlay inside Page 2 is not offset
-- **WHEN** the user drags a Kanban card while on Page 2
-- **THEN** the drag overlay appears at the same visual position as the dragged card (pointer aligns with the card), not offset to the right

@@ -210,5 +210,6 @@ export function useHabits(enabled: boolean) {
     checkIn,
     streakFor,
     isCheckedInToday,
+    checkInsByHabit,
   }
 }

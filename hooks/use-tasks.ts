@@ -17,6 +17,7 @@ export interface Task {
   dueDate: string | null
   priority: TaskPriority | null
   status: TaskStatus
+  completedAt: string | null
   position: number
   syncToCalendar: boolean
   createdAt: string

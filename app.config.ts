@@ -284,6 +284,22 @@ export default defineAppConfig({
       en: 'No tasks yet. Add your first task to get started.',
       id: 'Belum ada tugas. Tambahkan tugas pertamamu untuk mulai.',
     },
+    'kanban.empty_state_week': {
+      en: 'No tasks completed this week.',
+      id: 'Belum ada tugas yang selesai minggu ini.',
+    },
+    'kanban.week_label_prefix': {
+      en: 'Week',
+      id: 'Minggu',
+    },
+    'kanban.previous_week': {
+      en: 'Previous week',
+      id: 'Minggu sebelumnya',
+    },
+    'kanban.next_week': {
+      en: 'Next week',
+      id: 'Minggu berikutnya',
+    },
     'kanban.loading': {
       en: 'Loading tasks...',
       id: 'Memuat tugas...',
@@ -459,6 +475,26 @@ export default defineAppConfig({
     'habit.checked_in': {
       en: 'Checked in',
       id: 'Sudah ditandai',
+    },
+    'habit.week_label_prefix': {
+      en: 'Week',
+      id: 'Minggu',
+    },
+    'habit.previous_week': {
+      en: 'Previous week',
+      id: 'Minggu sebelumnya',
+    },
+    'habit.next_week': {
+      en: 'Next week',
+      id: 'Minggu berikutnya',
+    },
+    'habit.week_checked': {
+      en: 'Checked in this week',
+      id: 'Sudah ditandai minggu ini',
+    },
+    'habit.week_not_checked': {
+      en: 'Not checked in this week',
+      id: 'Belum ditandai minggu ini',
     },
     'habit.form.title_label': {
       en: 'Title',

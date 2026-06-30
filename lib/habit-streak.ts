@@ -10,7 +10,7 @@ function startOfDayUTC(date: Date): Date {
   return d
 }
 
-function startOfIsoWeekUTC(date: Date): Date {
+export function startOfIsoWeekUTC(date: Date): Date {
   const d = startOfDayUTC(date)
   const day = d.getUTCDay()
   const diffToMonday = (day === 0 ? -6 : 1) - day
