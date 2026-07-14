@@ -92,6 +92,18 @@ export default defineAppConfig({
       en: 'Today',
       id: 'Hari Ini',
     },
+    'widgets.browsing_time': {
+      en: 'Browsing Time',
+      id: 'Waktu Penelusuran',
+    },
+    'widgets.browsing_time.sign_in_prompt': {
+      en: 'Sign in to see your weekly browsing time.',
+      id: 'Masuk untuk melihat waktu penelusuran mingguanmu.',
+    },
+    'widgets.browsing_time.empty': {
+      en: 'No activity tracked yet.',
+      id: 'Belum ada aktivitas yang tercatat.',
+    },
     'widgets.recent_activity': {
       en: 'Recent Activity',
       id: 'Aktivitas Terbaru',

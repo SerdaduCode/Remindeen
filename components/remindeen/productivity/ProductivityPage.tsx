@@ -13,6 +13,7 @@ import HabitTracker from "../habit/HabitTracker";
 import CalendarView from "../calendar/CalendarView";
 import Today from "../browser-tracking/Today";
 import RecentActivity from "../browser-tracking/RecentActivity";
+import BrowsingTimeChart from "../browser-tracking/BrowsingTimeChart";
 import SignInPrompt from "./SignInPrompt";
 import ProductivityMenu from "./ProductivityMenu";
 import ApiKeysModal from "./ApiKeysModal";
@@ -118,6 +119,9 @@ function ProductivityPage({ backgroundUrl }: ProductivityPageProps) {
             </div>
           </div>
           <div className="flex flex-col gap-4 min-h-0">
+            <section className={`${GLASS_PANEL} flex shrink-0 flex-col`}>
+              <BrowsingTimeChart />
+            </section>
             <section className={`${GLASS_PANEL} flex min-h-0 flex-col`}>
               <Today />
             </section>
