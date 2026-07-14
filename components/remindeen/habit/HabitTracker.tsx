@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CalendarCheck, ChevronLeft, ChevronRight, Flame, Check, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useHabits, type Habit, type HabitCheckIn } from "@/hooks/use-habits";
+import type { Habit, HabitCheckIn, HabitInput } from "@/hooks/use-habits";
 import { useTranslation } from "@/hooks/use-translation";
 import { addWeeks, formatWeekRange, getCurrentWeekStart, getIsoWeekNumber, getIsoWeekYear, isCurrentWeek } from "@/lib/iso-week";
 import HabitFormModal, { type HabitFormValues } from "./HabitFormModal";
@@ -49,19 +49,31 @@ function weekCheckedState(weekStart: Date, checkIns: HabitCheckIn[]): boolean {
   return checkIns.some((c) => c.periodStart.slice(0, 10) === weekKey);
 }
 
-function HabitTracker() {
-  const {
-    habits,
-    loading,
-    error,
-    createHabit,
-    updateHabit,
-    deleteHabit,
-    checkIn,
-    streakFor,
-    isCheckedInToday,
-    checkInsByHabit,
-  } = useHabits(true);
+interface HabitTrackerProps {
+  habits: Habit[];
+  loading: boolean;
+  error: string | null;
+  createHabit: (input: HabitInput) => Promise<Habit>;
+  updateHabit: (id: number, updates: Partial<HabitInput>) => Promise<Habit>;
+  deleteHabit: (id: number) => Promise<void>;
+  checkIn: (habit: Habit) => Promise<void>;
+  streakFor: (habit: Habit) => number;
+  isCheckedInToday: (habit: Habit) => boolean;
+  checkInsByHabit: Record<number, HabitCheckIn[]>;
+}
+
+function HabitTracker({
+  habits,
+  loading,
+  error,
+  createHabit,
+  updateHabit,
+  deleteHabit,
+  checkIn,
+  streakFor,
+  isCheckedInToday,
+  checkInsByHabit,
+}: HabitTrackerProps) {
   const { t, lang } = useTranslation();
   const [formState, setFormState] = useState<FormState>(null);
   const [weekCursor, setWeekCursor] = useState<Date>(() => getCurrentWeekStart());

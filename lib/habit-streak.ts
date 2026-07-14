@@ -55,3 +55,34 @@ export function isCheckedInForCurrentPeriod(frequency: HabitFrequency, periodSta
   const currentPeriod = currentPeriodKey(frequency)
   return periodStarts.some((value) => value.slice(0, 10) === currentPeriod)
 }
+
+function startOfLocalWeek(date: Date): Date {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  const day = d.getDay()
+  const diffToMonday = (day === 0 ? -6 : 1) - day
+  d.setDate(d.getDate() + diffToMonday)
+  return d
+}
+
+// Weekly habits have exactly one check-in per ISO week regardless of
+// weekDays (see checkInHabit's habitId_periodStart uniqueness), so their
+// rate is boolean — matching the prototype's habitWeeklyRate() and this
+// codebase's own weekCheckedState in HabitTracker.tsx, not a weekDays-based
+// fraction. Daily habits use local calendar days (like currentPeriodKey)
+// so a day counts as soon as it's checked in locally, not in UTC.
+export function computeWeeklyRate(frequency: HabitFrequency, periodStarts: string[]): number {
+  if (frequency === 'weekly') {
+    return isCheckedInForCurrentPeriod('weekly', periodStarts) ? 100 : 0
+  }
+
+  const completed = new Set(periodStarts.map((value) => value.slice(0, 10)))
+  const weekStart = startOfLocalWeek(new Date())
+  let count = 0
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(weekStart)
+    day.setDate(day.getDate() + i)
+    if (completed.has(day.toLocaleDateString('en-CA'))) count += 1
+  }
+  return (count / 7) * 100
+}

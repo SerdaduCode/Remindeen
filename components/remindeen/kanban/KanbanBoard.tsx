@@ -11,7 +11,7 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { ChevronLeft, ChevronRight, LayoutGrid, Plus } from "lucide-react";
-import { useTasks, type Task, type TaskStatus } from "@/hooks/use-tasks";
+import type { Task, TaskInput, TaskStatus } from "@/hooks/use-tasks";
 import { useTranslation } from "@/hooks/use-translation";
 import { addWeeks, formatWeekRange, getCurrentWeekStart, getIsoWeekNumber, getIsoWeekYear, isCurrentWeek } from "@/lib/iso-week";
 import KanbanColumn from "./KanbanColumn";
@@ -32,15 +32,23 @@ const ARROW_BUTTON_CLASS =
 
 type FormState = { mode: "create" } | { mode: "edit"; task: Task } | null;
 
+interface KanbanBoardProps {
+  tasks: Task[];
+  loading: boolean;
+  error: string | null;
+  createTask: (input: TaskInput) => Promise<Task>;
+  updateTask: (id: number, updates: Partial<TaskInput> & { status?: TaskStatus }) => Promise<Task>;
+  updateTaskPosition: (id: number, neighbors: { beforeId?: number; afterId?: number }) => Promise<Task>;
+  deleteTask: (id: number) => Promise<void>;
+}
+
 function isTaskCompletedInWeek(task: Task, weekStart: Date, weekEnd: Date): boolean {
   if (!task.completedAt) return false;
   const completedTime = new Date(task.completedAt).getTime();
   return completedTime >= weekStart.getTime() && completedTime < weekEnd.getTime();
 }
 
-function KanbanBoard() {
-  const { tasks, loading, error, createTask, updateTask, updateTaskPosition, deleteTask } =
-    useTasks(true);
+function KanbanBoard({ tasks, loading, error, createTask, updateTask, updateTaskPosition, deleteTask }: KanbanBoardProps) {
   const { t, lang } = useTranslation();
   const [formState, setFormState] = useState<FormState>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);

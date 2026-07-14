@@ -308,6 +308,22 @@ export default defineAppConfig({
       en: 'Failed to load tasks.',
       id: 'Gagal memuat tugas.',
     },
+    'kanbanSummary.title': {
+      en: 'Kanban Summary',
+      id: 'Ringkasan Kanban',
+    },
+    'kanbanSummary.total_label': {
+      en: 'Total Tasks',
+      id: 'Total Tugas',
+    },
+    'kanbanSummary.done_label': {
+      en: 'Done',
+      id: 'Selesai',
+    },
+    'kanbanSummary.due_label': {
+      en: 'Due This Week',
+      id: 'Jatuh Tempo',
+    },
     'kanban.form.title_label': {
       en: 'Title',
       id: 'Judul',
@@ -575,6 +591,122 @@ export default defineAppConfig({
     'habit.form.delete_confirm': {
       en: 'Delete this habit? This cannot be undone.',
       id: 'Hapus kebiasaan ini? Tindakan ini tidak dapat dibatalkan.',
+    },
+    'brainDump.title': {
+      en: 'Brain Dump',
+      id: 'Brain Dump',
+    },
+    'brainDump.input_placeholder': {
+      en: 'Write a quick idea...',
+      id: 'Tulis ide singkat...',
+    },
+    'brainDump.add_note': {
+      en: 'Add note',
+      id: 'Tambah catatan',
+    },
+    'brainDump.delete_note': {
+      en: 'Delete note',
+      id: 'Hapus catatan',
+    },
+    'brainDump.empty_state': {
+      en: 'No notes yet. Write your first idea.',
+      id: 'Belum ada catatan. Tulis ide pertamamu.',
+    },
+    'brainDump.error_loading': {
+      en: 'Failed to load notes.',
+      id: 'Gagal memuat catatan.',
+    },
+    'brainDump.theme_ide': {
+      en: 'Idea',
+      id: 'Ide',
+    },
+    'brainDump.theme_kerja': {
+      en: 'Work',
+      id: 'Kerja',
+    },
+    'brainDump.theme_pribadi': {
+      en: 'Personal',
+      id: 'Pribadi',
+    },
+    'brainDump.theme_dakwah': {
+      en: 'Dakwah',
+      id: 'Dakwah',
+    },
+    'prayerCheckin.title': {
+      en: 'Daily Prayers',
+      id: 'Sholat 5 Waktu',
+    },
+    'prayerCheckin.not_marked': {
+      en: 'Not marked',
+      id: 'Belum ditandai',
+    },
+    'prayerCheckin.on_time': {
+      en: 'On time',
+      id: 'Tepat waktu',
+    },
+    'prayerCheckin.late_prefix': {
+      en: 'Late',
+      id: 'Telat',
+    },
+    'prayerCheckin.error_loading': {
+      en: 'Failed to load prayer check-ins.',
+      id: 'Gagal memuat data sholat.',
+    },
+    'quranProgress.title': {
+      en: 'Quran Progress',
+      id: 'Progres Tilawah',
+    },
+    'quranProgress.juz_prefix': {
+      en: 'Juz',
+      id: 'Juz',
+    },
+    'quranProgress.pages_suffix': {
+      en: 'pages',
+      id: 'halaman',
+    },
+    'quranProgress.add_page_aria': {
+      en: 'Add one page',
+      id: 'Tambah 1 halaman',
+    },
+    'quranProgress.error_loading': {
+      en: 'Failed to load Quran progress.',
+      id: 'Gagal memuat progres tilawah.',
+    },
+    'todolist.title': {
+      en: 'Todolist',
+      id: 'Todolist',
+    },
+    'todolist.input_placeholder': {
+      en: 'Add a quick note...',
+      id: 'Tambah catatan singkat...',
+    },
+    'todolist.add_item': {
+      en: 'Add',
+      id: 'Tambah',
+    },
+    'todolist.delete_item': {
+      en: 'Delete item',
+      id: 'Hapus catatan',
+    },
+    'todolist.empty_state': {
+      en: 'No notes yet. Add your first one.',
+      id: 'Belum ada catatan. Tambahkan yang pertama.',
+    },
+    'todolist.error_loading': {
+      en: 'Failed to load todolist.',
+      id: 'Gagal memuat todolist.',
+    },
+    'weekSummary.title': {
+      en: 'Week Summary',
+      id: 'Ringkasan Minggu',
+    },
+    'weekSummary.tasks_label': {
+      en: 'Tasks Done',
+      id: 'Tugas Selesai',
+    },
+    'weekSummary.habits_label': {
+      en: 'Habits',
+      id: 'Kebiasaan',
     },
     'calendar.prev_month_aria': {
       en: 'Previous month',
