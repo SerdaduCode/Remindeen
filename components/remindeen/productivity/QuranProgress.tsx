@@ -56,13 +56,17 @@ function QuranProgress() {
         >
           <SelectTrigger
             size="sm"
-            className="w-full rounded-lg border-white/10 bg-white/[0.06] text-white/90 data-[placeholder]:text-white/40"
+            className="flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-white/90 shadow-none outline-none transition-colors hover:bg-white/10 focus-visible:border-teal-400/40 focus-visible:ring-[3px] focus-visible:ring-teal-400/20 data-[placeholder]:text-white/40 [&_svg]:!text-white/60 [&_svg]:!opacity-100"
           >
             <SelectValue placeholder={t("quranProgress.select_surah_placeholder")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-white/10 bg-[#1a1a1f]/95 text-white/90 backdrop-blur-sm">
             {surahs.map((surah) => (
-              <SelectItem key={surah.id} value={String(surah.id)}>
+              <SelectItem
+                key={surah.id}
+                value={String(surah.id)}
+                className="text-white/80 focus:bg-white/10 focus:text-white data-[state=checked]:bg-white/10 data-[state=checked]:text-white"
+              >
                 {surah.number}. {surah.name}
               </SelectItem>
             ))}
@@ -76,13 +80,17 @@ function QuranProgress() {
         >
           <SelectTrigger
             size="sm"
-            className="w-full rounded-lg border-white/10 bg-white/[0.06] text-white/90 data-[placeholder]:text-white/40"
+            className="flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-white/90 shadow-none outline-none transition-colors hover:bg-white/10 focus-visible:border-teal-400/40 focus-visible:ring-[3px] focus-visible:ring-teal-400/20 data-[placeholder]:text-white/40 [&_svg]:!text-white/60 [&_svg]:!opacity-100"
           >
             <SelectValue placeholder={t("quranProgress.select_ayah_placeholder")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-white/10 bg-[#1a1a1f]/95 text-white/90 backdrop-blur-sm">
             {ayahOptions.map((number) => (
-              <SelectItem key={number} value={String(number)}>
+              <SelectItem
+                key={number}
+                value={String(number)}
+                className="text-white/80 focus:bg-white/10 focus:text-white data-[state=checked]:bg-white/10 data-[state=checked]:text-white"
+              >
                 {number}
               </SelectItem>
             ))}
