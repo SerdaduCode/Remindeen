@@ -684,6 +684,26 @@ export default defineAppConfig({
       en: 'Failed to load Quran progress.',
       id: 'Gagal memuat progres tilawah.',
     },
+    'quranProgress.select_surah_placeholder': {
+      en: 'Select surah',
+      id: 'Pilih surat',
+    },
+    'quranProgress.select_ayah_placeholder': {
+      en: 'Ayah',
+      id: 'Ayat',
+    },
+    'quranProgress.surah_prefix': {
+      en: 'Surah',
+      id: 'Surah',
+    },
+    'quranProgress.ayah_prefix': {
+      en: 'Ayah',
+      id: 'Ayat',
+    },
+    'quranProgress.no_progress': {
+      en: 'No reading progress yet',
+      id: 'Belum ada progres tilawah',
+    },
     'todolist.title': {
       en: 'Todolist',
       id: 'Todolist',
