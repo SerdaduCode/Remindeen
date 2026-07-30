@@ -94,7 +94,11 @@ export function useTodolist(enabled: boolean) {
       method: 'POST',
       body: JSON.stringify({ text }),
     })
-    setItems((prev) => [...prev, created])
+    // Dedupe against the item id: the API also publishes a `todoItem.created`
+    // Pusher event back to the creator's own private channel, and that event
+    // can arrive (and get upserted into state) before this POST response
+    // resolves. Without this guard the item gets appended a second time here.
+    setItems((prev) => (prev.some((i) => i.id === created.id) ? prev : [...prev, created]))
     return created
   }
 
