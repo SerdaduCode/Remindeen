@@ -163,7 +163,7 @@ async function notifyPrayerTime(prayer: string) {
 
   await browser.notifications.create('', {
     type: 'basic',
-    iconUrl: browser.runtime.getURL('/wxt.svg'),
+    iconUrl: browser.runtime.getURL('/icon/128.png'),
     title: 'Remindeen',
     message,
   });
@@ -433,6 +433,16 @@ async function handleConnectCalendar(): Promise<SignInResult> {
   }
 }
 
+// Firefox exposes `sidebarAction`; Chrome exposes `sidePanel`. Neither exists in
+// the other browser, so every use below is feature-detected.
+interface SidebarAction {
+  toggle(): Promise<void>;
+}
+
+function getSidebarAction(): SidebarAction | undefined {
+  return (browser as unknown as { sidebarAction?: SidebarAction }).sidebarAction;
+}
+
 export default defineBackground(() => {
   console.log('Background script loaded!', { id: browser.runtime.id });
 
@@ -447,23 +457,25 @@ export default defineBackground(() => {
     }
   });
 
-  // Handle extension icon click to open sidepanel
-  browser.action.onClicked.addListener(async (tab) => {
-    if (tab.id) {
-      await browser.sidePanel.open({ tabId: tab.id });
-    }
+  // Chrome: let the browser open the side panel natively when the toolbar icon is clicked
+  browser.sidePanel?.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
+
+  // Firefox: toggle the sidebar on icon click. toggle() must be called synchronously
+  // from the listener, since Firefox only allows it inside a user-input handler.
+  browser.action?.onClicked.addListener(() => {
+    getSidebarAction()?.toggle().catch(console.error);
   });
 
-  // Set up sidepanel options on install
-  browser.runtime.onInstalled.addListener(async () => {
-    await browser.sidePanel.setOptions({
-      path: 'sidepanel.html',
-      enabled: true
-    });
-    
-    await browser.sidePanel.setPanelBehavior({
-      openPanelOnActionClick: true
-    });
+  // Keyboard shortcut (manifest command "toggle-sidebar")
+  browser.commands?.onCommand.addListener((command, tab) => {
+    if (command !== 'toggle-sidebar') return;
+
+    const sidebarAction = getSidebarAction();
+    if (sidebarAction) {
+      sidebarAction.toggle().catch(console.error);
+    } else if (browser.sidePanel?.open && tab?.windowId !== undefined) {
+      browser.sidePanel.open({ windowId: tab.windowId }).catch(console.error);
+    }
   });
 
   // Reset stats if midnight passed while the browser was closed
