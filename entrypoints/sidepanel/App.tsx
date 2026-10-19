@@ -5,13 +5,10 @@ import { useSettings } from "@/hooks/use-settings"
 import Header from "@/components/remindeen/Header"
 import Loading from "@/components/remindeen/Loading"
 import Footer from "@/components/remindeen/Footer"
-import Support from "@/components/remindeen/Support"
 import About from "@/components/remindeen/About"
 import Theme from "@/components/remindeen/Theme"
 import Language from "@/components/remindeen/Language"
 import AppTab from "@/components/remindeen/AppTab"
-import Today from "@/components/remindeen/Today"
-import RecentActivity from "@/components/remindeen/RecentActivity"
 import SearchBarToggle from "@/components/remindeen/SearchBarToggle"
 
 function App() {
@@ -34,10 +31,6 @@ function App() {
           <AppTab />
           <TabsContent value="home" className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
-              <div className="space-y-4 p-4">
-                <Today />
-              </div>
-              <Separator />
               <div className="space-y-4 p-4">
                 <Theme></Theme>
                 <Separator />
