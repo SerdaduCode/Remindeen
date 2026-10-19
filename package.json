@@ -2,7 +2,7 @@
   "name": "Remindeen",
   "description": "Remindeen mengingatkan sholat dan memberi inspirasi bagi Muslim dalam aktivitas sehari-hari.",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

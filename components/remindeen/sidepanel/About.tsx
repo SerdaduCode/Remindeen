@@ -20,7 +20,7 @@ const About = () => {
         <CardHeader>
           <CardTitle className="text-lg text-center">
             Remindeen &nbsp;
-            <Badge variant="secondary">v1.3.0</Badge>
+            <Badge variant="secondary">v1.4.0</Badge>
           </CardTitle>
 
           <CardDescription>
