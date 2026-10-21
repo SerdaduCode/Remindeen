@@ -170,7 +170,7 @@ const Prayers = () => {
   const translatedRemainingText = formatRemainingTime(nextPrayer.remainingMinutes);
 
   return (
-    <div className="flex flex-col gap-2 text-base md:text-xl">
+    <div className="relative text-base md:text-xl">
       <div
         className="border-2 border-slate-100 text-slate-100 px-3 rounded-md cursor-pointer hover:bg-slate-100 hover:text-black transform duration-300"
         onClick={() => setHidden(!hidden)}
@@ -189,8 +189,8 @@ const Prayers = () => {
         <p className="w-full text-sm text-end mr-5 italic">{translatedRemainingText}</p>
       </div>
       <div
-        className={`flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${
-          hidden ? "opacity-0" : "opacity-100"
+        className={`absolute left-0 right-0 top-full mt-2 z-10 flex flex-col gap-1 text-base md:text-xl transition-opacity duration-300 ${
+          hidden ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
         {Object.entries(prayerTimes).map(([prayer, time]) => (

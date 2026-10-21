@@ -22,35 +22,33 @@ function App() {
 
   return (
     <>
+      {/* Fixed so the background always covers the viewport, even when content overflows (e.g. 150% zoom) */}
       <div
         style={{
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
+          position: "fixed",
+          inset: 0,
           backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.0), rgba(0,0,0,0.1)), url(${backgroundUrl})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
           zIndex: -999,
         }}
-      >
-        <div className="text-white">
-          <div className="flex flex-col justify-evenly min-h-[100vh]">
-            <header className="flex justify-between flex-col md:flex-row">
-              <div className="p-8 md:w-[300px]">
-                <Prayers />
-              </div>
-              <div className="hidden md:block md:text-right px-8 text-sm pt-2">
-                <Time />
-              </div>
-            </header>
-            <main className="flex-1 flex flex-col items-center gap-12 px-4">
-              <Verse />
-              {system.showSearchBar && <SearchBar />}
-            </main>
-          </div>
+      />
+      {/* Exactly one viewport tall; scrolls (scrollbar hidden) only if the content truly cannot fit */}
+      <div className="no-scrollbar h-screen overflow-y-auto text-white">
+        <div className="flex flex-col min-h-full">
+          <header className="flex justify-between flex-col md:flex-row shrink-0">
+            <div className="p-8 md:w-[300px]">
+              <Prayers />
+            </div>
+            <div className="hidden md:block md:text-right px-8 text-sm pt-2">
+              <Time />
+            </div>
+          </header>
+          <main className="flex-1 flex flex-col items-center justify-center gap-6 px-4 pb-16">
+            <Verse />
+            {system.showSearchBar && <SearchBar />}
+          </main>
         </div>
       </div>
     </>
