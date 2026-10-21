@@ -4,10 +4,12 @@ import Verse from "@/components/remindeen/Verse";
 import SearchBar from "@/components/remindeen/SearchBar";
 import fetchPicture from "@/components/remindeen/Background";
 import { useSettings } from "@/hooks/use-settings";
+import { useCounterZoom } from "@/hooks/use-counter-zoom";
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState("");
   const { system } = useSettings();
+  const zoom = useCounterZoom();
 
   useEffect(() => {
     const getBackgroundImage = async () => {
@@ -34,8 +36,17 @@ function App() {
           zIndex: -999,
         }}
       />
-      {/* Exactly one viewport tall; scrolls (scrollbar hidden) only if the content truly cannot fit */}
-      <div className="no-scrollbar h-screen overflow-y-auto text-white">
+      {/* Counter-zoomed so the layout looks the same at any browser zoom level.
+          Exactly one viewport tall; scrolls (scrollbar hidden) only if the content truly cannot fit */}
+      <div
+        className="no-scrollbar overflow-y-auto text-white"
+        style={{
+          zoom: zoom.scale,
+          width: zoom.width,
+          height: zoom.height,
+          visibility: zoom.ready ? "visible" : "hidden",
+        }}
+      >
         <div className="flex flex-col min-h-full">
           <header className="flex justify-between flex-col md:flex-row shrink-0">
             <div className="p-8 md:w-[300px]">
